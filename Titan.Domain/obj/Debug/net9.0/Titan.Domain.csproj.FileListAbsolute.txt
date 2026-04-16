@@ -1,0 +1,12 @@
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\bin\Debug\net9.0\Titan.Domain.deps.json
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\bin\Debug\net9.0\Titan.Domain.dll
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\bin\Debug\net9.0\Titan.Domain.pdb
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\Titan.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\Titan.Domain.AssemblyInfoInputs.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\Titan.Domain.AssemblyInfo.cs
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\Titan.Domain.csproj.CoreCompileInputs.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\Titan.Domain.sourcelink.json
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\Titan.Domain.dll
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\refint\Titan.Domain.dll
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\Titan.Domain.pdb
+D:\TestAPI(REfreshToken\Titan\Titan.Domain\obj\Debug\net9.0\ref\Titan.Domain.dll
