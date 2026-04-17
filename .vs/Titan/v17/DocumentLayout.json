@@ -1,0 +1,232 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\TestAPI(REfreshToken\\Titan\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\recommendation\\recommendationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\recommendation\\recommendationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\api response\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\api response\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\dashboard\\recentorderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\dashboard\\recentorderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\dashboard\\topproductdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\dashboard\\topproductdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\dashboard\\revenuechartdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\dashboard\\revenuechartdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\dashboard\\dashboardstatsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\dashboard\\dashboardstatsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\pagination\\pagedresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\pagination\\pagedresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\notification\\notificationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\notification\\notificationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\review\\createreviewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\review\\createreviewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\review\\reviewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\review\\reviewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\coupon\\createcoupondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\coupon\\createcoupondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|d:\\testapi(refreshtoken\\titan\\titan.application\\dtos\\coupon\\coupondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEC2E5B0-5D09-4620-B7EF-1161E3CBA154}|Titan.Application\\Titan.Application.csproj|solutionrelative:titan.application\\dtos\\coupon\\coupondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RecommendationDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Recommendation\\RecommendationDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Recommendation\\RecommendationDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Recommendation\\RecommendationDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Recommendation\\RecommendationDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:37:16.754Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApiResponse.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\API Response\\ApiResponse.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\API Response\\ApiResponse.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\API Response\\ApiResponse.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\API Response\\ApiResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:35:29.845Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RecentOrderDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Dashboard\\RecentOrderDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Dashboard\\RecentOrderDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Dashboard\\RecentOrderDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Dashboard\\RecentOrderDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAACQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:33:36.972Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TopProductDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Dashboard\\TopProductDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Dashboard\\TopProductDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Dashboard\\TopProductDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Dashboard\\TopProductDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:32:47.182Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RevenueChartDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Dashboard\\RevenueChartDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Dashboard\\RevenueChartDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Dashboard\\RevenueChartDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Dashboard\\RevenueChartDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:32:04.617Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DashboardStatsDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Dashboard\\DashboardStatsDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Dashboard\\DashboardStatsDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Dashboard\\DashboardStatsDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Dashboard\\DashboardStatsDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:31:36.789Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PagedResult.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Pagination\\PagedResult.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Pagination\\PagedResult.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Pagination\\PagedResult.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Pagination\\PagedResult.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:30:31.714Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "NotificationDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Notification\\NotificationDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Notification\\NotificationDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Notification\\NotificationDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Notification\\NotificationDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:29:07.359Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CreateReviewDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Review\\CreateReviewDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Review\\CreateReviewDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Review\\CreateReviewDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Review\\CreateReviewDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:24:55.603Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ReviewDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Review\\ReviewDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Review\\ReviewDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Review\\ReviewDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Review\\ReviewDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:24:01.801Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "CreateCouponDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Coupon\\CreateCouponDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Coupon\\CreateCouponDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Coupon\\CreateCouponDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Coupon\\CreateCouponDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:21:45.414Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CouponDto.cs",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Coupon\\CouponDto.cs",
+              "RelativeDocumentMoniker": "Titan.Application\\DTOs\\Coupon\\CouponDto.cs",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\DTOs\\Coupon\\CouponDto.cs",
+              "RelativeToolTip": "Titan.Application\\DTOs\\Coupon\\CouponDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T17:20:32.485Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
