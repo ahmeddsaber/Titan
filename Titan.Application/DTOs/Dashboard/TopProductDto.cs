@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Titan.Application.DTOs.Dashboard
 {
-    public record TopProductDto(Guid Id, string Name, string ImageUrl, int SoldCount, decimal Revenue)
+    public record TopProductDto(Guid Id, string Name, string ImageUrl, int SoldCount, decimal Revenue);
 }

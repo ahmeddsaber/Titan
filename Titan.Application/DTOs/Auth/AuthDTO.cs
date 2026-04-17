@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Titan.Application.DTOs.User;
 
 namespace Titan.Application.DTOs.Auth;
 public record RegisterDto(string FirstName, string LastName, string Email, string Phone, string Password);
