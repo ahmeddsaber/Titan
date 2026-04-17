@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {}
+    "net9.0": {
+      "Titan.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/Titan.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Titan.Domain.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Titan.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Titan.Domain/Titan.Domain.csproj",
+      "msbuildProject": "../Titan.Domain/Titan.Domain.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net9.0": []
+    "net9.0": [
+      "Titan.Domain >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\HP\\.nuget\\packages\\": {},
@@ -39,7 +58,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\TestAPI(REfreshToken\\Titan\\Titan.Domain\\Titan.Domain.csproj": {
+              "projectPath": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Domain\\Titan.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
