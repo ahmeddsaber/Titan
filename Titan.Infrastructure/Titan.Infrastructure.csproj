@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Titan.API\Titan.API.csproj" />
     <ProjectReference Include="..\Titan.Application\Titan.Application.csproj" />
     <ProjectReference Include="..\Titan.Domain\Titan.Domain.csproj" />
   </ItemGroup>
