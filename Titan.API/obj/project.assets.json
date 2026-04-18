@@ -33,6 +33,29 @@
             "related": ".pdb;.xml"
           }
         }
+      },
+      "Titan.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Titan.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Titan.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Titan.Application.dll": {}
+        }
+      },
+      "Titan.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/Titan.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Titan.Domain.dll": {}
+        }
       }
     }
   },
@@ -67,11 +90,22 @@
         "microsoft.openapi.1.6.17.nupkg.sha512",
         "microsoft.openapi.nuspec"
       ]
+    },
+    "Titan.Application/1.0.0": {
+      "type": "project",
+      "path": "../Titan.Application/Titan.Application.csproj",
+      "msbuildProject": "../Titan.Application/Titan.Application.csproj"
+    },
+    "Titan.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Titan.Domain/Titan.Domain.csproj",
+      "msbuildProject": "../Titan.Domain/Titan.Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "Microsoft.AspNetCore.OpenApi >= 9.0.7"
+      "Microsoft.AspNetCore.OpenApi >= 9.0.7",
+      "Titan.Application >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -106,7 +140,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\Titan.Application.csproj": {
+              "projectPath": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\Titan.Application.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

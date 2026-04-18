@@ -32,7 +32,11 @@
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\Titan.Application.csproj": {
+                "projectPath": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Application\\Titan.Application.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
