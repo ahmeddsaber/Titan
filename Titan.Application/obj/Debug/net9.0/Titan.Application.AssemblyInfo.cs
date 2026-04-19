@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Titan.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d628e8164c4b09d7566c532f5126a95f3943cccf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1887819aee8571f628874cbbb387c991aaeabdf2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Titan.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Titan.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
