@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Titan.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+715c6be227cfd306ecaf408d291fc62f6ac6733f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c55392cb1252cba7474741d28a7abddaa3a4011d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Titan.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Titan.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
