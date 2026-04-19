@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Titan.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0b626ac348d589f68f1a3b0ccdd2a449f3152533")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+715c6be227cfd306ecaf408d291fc62f6ac6733f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Titan.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Titan.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
