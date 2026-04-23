@@ -11,8 +11,8 @@ using Titan.Application.Interfaces;
 using Titan.Domain.Entities;
 using Titan.Infrastructure.Data;
 
-namespace Titan.Infrastructure.Services
-{
+namespace Titan.Infrastructure.Services;
+
     public class CartService : ICartService
     {
         private readonly ApplicationDbContext _db;
@@ -187,4 +187,4 @@ namespace Titan.Infrastructure.Services
         };
     }
 
-}
+

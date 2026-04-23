@@ -15,8 +15,8 @@ namespace Titan.Infrastructure.Services
     public class WishlistService : IWishlistService
     {
         private readonly ApplicationDbContext _db;
-        private readonly IProductService _productService;
-        public WishlistService(ApplicationDbContext db, IProductService productService) { _db = db; _productService = productService; }
+
+        public WishlistService(ApplicationDbContext db) { _db = db;  }
 
         public async Task<ApiResponse<List<ProductDto>>> GetWishlistAsync(Guid userId)
         {

@@ -2,7 +2,9 @@ D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\bin\Debug\net9.0\Titan.Infras
 D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\bin\Debug\net9.0\Titan.Infrastructure.runtimeconfig.json
 D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\bin\Debug\net9.0\Titan.Infrastructure.dll
 D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\bin\Debug\net9.0\Titan.Infrastructure.pdb
+D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\bin\Debug\net9.0\Titan.Application.dll
 D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\bin\Debug\net9.0\Titan.Domain.dll
+D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\bin\Debug\net9.0\Titan.Application.pdb
 D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\bin\Debug\net9.0\Titan.Domain.pdb
 D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\obj\Debug\net9.0\Titan.Infrastructure.csproj.AssemblyReference.cache
 D:\TestAPI(REfreshToken\Titan\Titan.Infrastructure\obj\Debug\net9.0\Titan.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig

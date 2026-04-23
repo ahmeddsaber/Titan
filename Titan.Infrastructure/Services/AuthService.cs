@@ -12,8 +12,8 @@ using Titan.Domain.Entities;
 using Titan.Domain.Enum;
 using Titan.Infrastructure.Data;
 
-namespace Titan.Infrastructure.Services
-{
+namespace Titan.Infrastructure.Services;
+
     public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext _db;
@@ -174,4 +174,5 @@ namespace Titan.Infrastructure.Services
             PreferredLanguage = u.PreferredLanguage
         };
     }
-    }
+    
+ 

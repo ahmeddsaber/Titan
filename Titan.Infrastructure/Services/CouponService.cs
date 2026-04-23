@@ -12,8 +12,8 @@ using Titan.Domain.Entities;
 using Titan.Domain.Enum;
 using Titan.Infrastructure.Data;
 
-namespace Titan.Infrastructure.Services
-{
+namespace Titan.Infrastructure.Services;
+
     public class CouponService : ICouponService
     {
         private readonly ApplicationDbContext _db;
@@ -106,4 +106,4 @@ namespace Titan.Infrastructure.Services
             RemainingUses = c.MaxUsageCount.HasValue ? c.MaxUsageCount - c.UsageCount : null
         };
     }
-}
+

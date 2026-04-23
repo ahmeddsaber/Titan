@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,10 +11,11 @@ using Titan.Application.Interfaces;
 using Titan.Domain.Entities;
 using Titan.Domain.Enum;
 using Titan.Infrastructure.Data;
-using Titan.API.Hubs;
+using Titan.Infrastructure.Hubs;
 
-namespace Titan.Infrastructure.Services
-{
+
+namespace Titan.Infrastructure.Services;
+
     public class NotificationService : INotificationService
     {
         private readonly ApplicationDbContext _db;
@@ -110,4 +111,4 @@ namespace Titan.Infrastructure.Services
             CreatedAt = n.CreatedAt
         };
     }
-}
+
