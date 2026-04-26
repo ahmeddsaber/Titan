@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "cAa92XNej3M=",
+  "dgSpecHash": "lZovjUlFdVY=",
   "success": true,
   "projectFilePath": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Titan.Client.csproj",
   "expectedPackageFiles": [
@@ -12,7 +12,10 @@
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly\\9.0.7\\microsoft.aspnetcore.components.webassembly.9.0.7.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly.devserver\\9.0.7\\microsoft.aspnetcore.components.webassembly.devserver.9.0.7.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.connections.abstractions\\9.0.10\\microsoft.aspnetcore.connections.abstractions.9.0.10.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.http.connections.client\\9.0.10\\microsoft.aspnetcore.http.connections.client.9.0.10.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.http.connections.common\\9.0.10\\microsoft.aspnetcore.http.connections.common.9.0.10.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.metadata\\9.0.7\\microsoft.aspnetcore.metadata.9.0.7.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.signalr.client\\9.0.10\\microsoft.aspnetcore.signalr.client.9.0.10.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.signalr.client.core\\9.0.10\\microsoft.aspnetcore.signalr.client.core.9.0.10.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.signalr.common\\9.0.10\\microsoft.aspnetcore.signalr.common.9.0.10.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.signalr.protocols.json\\9.0.10\\microsoft.aspnetcore.signalr.protocols.json.9.0.10.nupkg.sha512",
@@ -35,6 +38,7 @@
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.jsinterop.webassembly\\9.0.7\\microsoft.jsinterop.webassembly.9.0.7.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.net.illink.tasks\\9.0.7\\microsoft.net.illink.tasks.9.0.7.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.net.sdk.webassembly.pack\\9.0.7\\microsoft.net.sdk.webassembly.pack.9.0.7.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\system.net.serversentevents\\9.0.10\\system.net.serversentevents.9.0.10.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\system.threading.channels\\9.0.10\\system.threading.channels.9.0.10.nupkg.sha512"
   ],
   "logs": []

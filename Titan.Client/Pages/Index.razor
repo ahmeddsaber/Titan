@@ -1,0 +1,174 @@
+﻿@page "/"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@using Titan.Client.Services.Models
+@inject ProductService Products
+@inject CategoryService Categories
+@inject AuthService Auth
+@inject RecommendationService Recs
+
+<PageTitle>TITAN — Unleash The Titan</PageTitle>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 50% 50%,rgba(212,175,55,.05) 0%,transparent 70%);pointer-events:none"></div>
+  <div style="text-align:center;z-index:1;padding:40px 24px">
+    <p style="font-size:.75rem;letter-spacing:8px;color:var(--gold);text-transform:uppercase;margin-bottom:22px">New Collection 2025</p>
+    <h1 class="brand-font" style="font-size:clamp(5rem,14vw,11rem);letter-spacing:8px;color:var(--white);line-height:.9;margin-bottom:8px">
+      TIT<span style="color:var(--gold)">A</span>N
+    </h1>
+    <p style="font-size:clamp(.8rem,2vw,1.1rem);color:var(--silver-dim);letter-spacing:7px;text-transform:uppercase;margin-bottom:46px;font-weight:300">
+      Unleash The Titan
+    </p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="/shop"               class="btn btn-gold btn-lg">Shop Now</a>
+      <a href="/shop?hasDiscount=true" class="btn btn-outline-gold btn-lg">View Sale</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── CATEGORIES ── -->
+<section class="section" style="background:var(--black-soft)">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eye">Collections</p>
+      <h2 class="sec-title">Shop By Category</h2>
+    </div>
+    <div class="grid grid-3" style="gap:20px">
+      @foreach (var c in _cats)
+      {
+        <a href="/shop?category=@c.Slug" style="text-decoration:none;display:block;border-radius:var(--r-lg);overflow:hidden;position:relative;aspect-ratio:4/5;background:var(--black-card);border:1px solid var(--black-border);transition:var(--tr)"
+           class="cat-card">
+          @if (!string.IsNullOrEmpty(c.ImageUrl))
+          { <img src="@c.ImageUrl" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" /> }
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 55%)"></div>
+          <div style="position:absolute;bottom:22px;left:22px">
+            <h3 style="color:var(--white);font-size:1.4rem;margin-bottom:3px">@c.Name</h3>
+            <p style="color:var(--gold);font-size:.75rem;letter-spacing:2px;text-transform:uppercase">@c.ProductCount Products</p>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURED ── -->
+<section class="section">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eye">Featured</p>
+      <h2 class="sec-title">Best of TITAN</h2>
+      <p class="sec-sub">Handpicked pieces for those who demand excellence</p>
+    </div>
+    @if (_loadingFeat)
+    { <SkeletonGrid Count="8" /> }
+    else
+    {
+      <div class="grid grid-4">
+        @foreach (var p in _featured) { <ProductCard Product="p" /> }
+      </div>
+      <div style="text-align:center;margin-top:44px">
+        <a href="/shop" class="btn btn-outline-gold btn-lg">View All Products</a>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ── PROMO BANNER ── -->
+<section style="background:var(--gold);padding:58px 24px;text-align:center">
+  <p style="font-size:.72rem;letter-spacing:6px;color:var(--black);text-transform:uppercase;margin-bottom:6px">Limited Offer</p>
+  <h2 class="brand-font" style="font-size:clamp(2rem,6vw,4.5rem);color:var(--black);letter-spacing:4px;margin-bottom:12px">FREE SHIPPING OVER $500</h2>
+  <p style="color:rgba(0,0,0,.7);margin-bottom:28px">On all domestic orders. No code required.</p>
+  <a href="/shop" class="btn" style="background:var(--black);color:var(--white)">Explore Collection</a>
+</section>
+
+<!-- ── NEW ARRIVALS ── -->
+<section class="section" style="background:var(--black-soft)">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eye">Just Dropped</p>
+      <h2 class="sec-title">New Arrivals</h2>
+    </div>
+    <div class="grid grid-4">
+      @foreach (var p in _newest) { <ProductCard Product="p" /> }
+    </div>
+  </div>
+</section>
+
+<!-- ── BRAND VALUES ── -->
+<section class="section">
+  <div class="container">
+    <div class="grid grid-4" style="gap:32px">
+      @foreach (var (icon, title, desc) in _values)
+      {
+        <div style="text-align:center">
+          <div style="width:60px;height:60px;border-radius:50%;border:1px solid var(--gold);background:rgba(212,175,55,.06);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.4rem;color:var(--gold)">
+            <i class="@icon"></i>
+          </div>
+          <h4 style="color:var(--white);margin-bottom:6px;font-size:.95rem">@title</h4>
+          <p style="color:var(--silver-dim);font-size:.82rem">@desc</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ── RECOMMENDATIONS ── -->
+@if (Auth.IsAuthenticated && _recs.Any())
+{
+  <section class="section" style="background:var(--black-soft)">
+    <div class="container">
+      <div class="sec-header">
+        <p class="sec-eye">For You</p>
+        <h2 class="sec-title">Recommended</h2>
+      </div>
+      <div class="grid grid-4">
+        @foreach (var p in _recs) { <ProductCard Product="p" /> }
+      </div>
+    </div>
+  </section>
+}
+
+<style>
+  .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--black);position:relative;overflow:hidden;padding-top:70px}
+  .sec-header{text-align:center;margin-bottom:50px}
+  .sec-eye{font-size:.72rem;letter-spacing:6px;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+  .sec-title{font-size:clamp(1.8rem,4vw,3rem);margin-bottom:12px}
+  .sec-sub{color:var(--silver-dim);max-width:480px;margin:0 auto}
+  .section{padding:72px 0}
+  .cat-card:hover img{transform:scale(1.05)}
+</style>
+
+@code {
+  List<ProductDto>  _featured = new(), _newest = new(), _recs = new();
+  List<CategoryDto> _cats = new();
+  bool _loadingFeat = true;
+
+  readonly (string icon, string title, string desc)[] _values =
+  [
+    ("fas fa-gem",      "Premium Quality", "Only the finest materials."),
+    ("fas fa-truck",    "Fast Delivery",   "Global shipping, precision delivery."),
+    ("fas fa-undo",     "Easy Returns",    "30-day hassle-free returns."),
+    ("fas fa-shield-alt","Secure Shopping","Your data protected, always."),
+  ];
+
+  protected override async Task OnInitializedAsync()
+  {
+    await Categories.LoadAsync();
+    _cats = Categories.All.Take(3).ToList();
+
+    var featTask  = Products.GetFeaturedAsync(8);
+    var newTask   = Products.GetAllAsync(new ProductFilter { SortBy = "newest", PageSize = 4 });
+
+    await Task.WhenAll(featTask, newTask);
+    _featured    = await featTask ?? new();
+    _newest      = (await newTask)?.Items ?? new();
+    _loadingFeat = false;
+
+    if (Auth.IsAuthenticated)
+    {
+      var rec = await Recs.GetAsync(8);
+      _recs = rec?.Products ?? new();
+    }
+  }
+}

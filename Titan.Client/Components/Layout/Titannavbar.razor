@@ -1,0 +1,105 @@
+﻿@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@inject AuthService      Auth
+@inject CartService      Cart
+@inject NotificationService Notifs
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<nav class="navbar" id="titan-nav">
+  <div class="navbar-inner">
+
+    <a href="/" class="navbar-brand">TIT<span>A</span>N</a>
+
+    <ul class="navbar-nav">
+      <li><NavLink href="/"                   class="nav-link" Match="NavLinkMatch.All">Home</NavLink></li>
+      <li><NavLink href="/shop"               class="nav-link">Shop</NavLink></li>
+      <li><NavLink href="/shop?category=men"  class="nav-link">Men</NavLink></li>
+      <li><NavLink href="/shop?category=women"class="nav-link">Women</NavLink></li>
+      <li><NavLink href="/shop?hasDiscount=true" class="nav-link" style="color:var(--gold)">Sale</NavLink></li>
+      @if (Auth.IsAdmin)
+      { <li><NavLink href="/admin" class="nav-link" style="color:var(--gold)"><i class="fas fa-shield-alt"></i> Admin</NavLink></li> }
+    </ul>
+
+    <div class="navbar-actions">
+
+      <!-- Search -->
+      <button class="nav-icon" @onclick="ToggleSearch" title="Search"><i class="fas fa-search"></i></button>
+
+      <!-- Notifications -->
+      @if (Auth.IsAuthenticated)
+      {
+        <div style="position:relative">
+          <button class="nav-icon" @onclick="ToggleNotif" title="Notifications">
+            <i class="fas fa-bell"></i>
+            @if (Notifs.UnreadCount > 0)
+            { <span class="nav-badge">@(Notifs.UnreadCount > 9 ? "9+" : Notifs.UnreadCount.ToString())</span> }
+          </button>
+          @if (_showNotif) { <NotificationPanel OnClose="() => _showNotif = false" /> }
+        </div>
+        <button class="nav-icon" @onclick='() => Nav.NavigateTo("/wishlist")' title="Wishlist">
+          <i class="fas fa-heart"></i>
+        </button>
+      }
+
+      <!-- Cart -->
+      <button class="nav-icon" @onclick="OpenCart" title="Cart">
+        <i class="fas fa-shopping-bag"></i>
+        @if (Cart.Count > 0) { <span class="nav-badge">@Cart.Count</span> }
+      </button>
+
+      <!-- Auth -->
+      @if (Auth.IsAuthenticated)
+      {
+        <button class="nav-icon" @onclick='() => Nav.NavigateTo("/profile")' title="Profile">
+          @if (!string.IsNullOrEmpty(Auth.User?.ProfileImageUrl))
+          { <img src="@Auth.User.ProfileImageUrl" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid var(--gold)" /> }
+          else
+          { <i class="fas fa-user-circle" style="font-size:1.25rem"></i> }
+        </button>
+      }
+      else
+      {
+        <a href="/login"    class="btn btn-outline-gold btn-sm">Login</a>
+        <a href="/register" class="btn btn-gold btn-sm">Join</a>
+      }
+
+      <!-- RTL toggle -->
+      <button class="nav-icon" @onclick="ToggleLang" title="Language" style="font-size:.75rem;font-weight:800">
+        @(_lang == "en" ? "عر" : "EN")
+      </button>
+    </div>
+  </div>
+
+  @if (_showSearch)
+  {
+    <div style="padding:12px 24px;border-top:1px solid var(--black-border);background:var(--black-card)">
+      <div style="max-width:560px;margin:0 auto;display:flex;gap:10px">
+        <input type="text" class="form-control" placeholder="Search products..."
+               @bind="_q" @onkeyup="SearchKey" autofocus />
+        <button class="btn btn-gold btn-sm" @onclick="Search"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+  }
+</nav>
+
+@code {
+  bool _showNotif, _showSearch;
+  string _q = "", _lang = "en";
+
+  protected override async Task OnInitializedAsync()
+  { try { _lang = await JS.InvokeAsync<string>("TitanJS.getLanguage"); } catch { } }
+
+  void ToggleSearch()  { _showSearch = !_showSearch; _showNotif = false; }
+  void ToggleNotif()   { _showNotif  = !_showNotif;  _showSearch = false; }
+  void OpenCart()      => JS.InvokeVoidAsync("TitanJS.openCart");
+
+  void SearchKey(KeyboardEventArgs e)
+  { if (e.Key == "Enter") Search(); if (e.Key == "Escape") _showSearch = false; }
+
+  void Search()
+  { if (!string.IsNullOrWhiteSpace(_q)) { Nav.NavigateTo($"/shop?search={Uri.EscapeDataString(_q)}"); _showSearch = false; } }
+
+  async Task ToggleLang()
+  { _lang = _lang == "en" ? "ar" : "en"; await JS.InvokeVoidAsync("TitanJS.setLanguage", _lang); }
+}

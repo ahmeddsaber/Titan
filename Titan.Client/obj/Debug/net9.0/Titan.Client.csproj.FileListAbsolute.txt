@@ -1,0 +1,8 @@
+D:\TestAPI(REfreshToken\Titan\Titan.Client\obj\Debug\net9.0\Titan.Client.csproj.AssemblyReference.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Client\obj\Debug\net9.0\rpswa.dswa.cache.json
+D:\TestAPI(REfreshToken\Titan\Titan.Client\obj\Debug\net9.0\Titan.Client.GeneratedMSBuildEditorConfig.editorconfig
+D:\TestAPI(REfreshToken\Titan\Titan.Client\obj\Debug\net9.0\Titan.Client.AssemblyInfoInputs.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Client\obj\Debug\net9.0\Titan.Client.AssemblyInfo.cs
+D:\TestAPI(REfreshToken\Titan\Titan.Client\obj\Debug\net9.0\Titan.Client.csproj.CoreCompileInputs.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Client\obj\Debug\net9.0\Titan.Client.MvcApplicationPartsAssemblyInfo.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Client\obj\Debug\net9.0\Titan.Client.sourcelink.json

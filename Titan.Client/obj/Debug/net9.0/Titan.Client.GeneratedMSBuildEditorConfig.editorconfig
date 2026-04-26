@@ -28,6 +28,38 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Layout/Adminsidebar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcQWRtaW5zaWRlYmFyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Layout/Titancartdrawer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcVGl0YW5jYXJ0ZHJhd2VyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Layout/Titanfooter.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcVGl0YW5mb290ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Layout/Titannavbar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcVGl0YW5uYXZiYXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Product/Productcard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQcm9kdWN0XFByb2R1Y3RjYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Shared/Notificationpanel .razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcTm90aWZpY2F0aW9ucGFuZWwgLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Shared/SkeletonGrid.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcU2tlbGV0b25HcmlkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Shared/Toastcontainer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcVG9hc3Rjb250YWluZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -36,8 +68,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Weather.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VhdGhlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/TestAPI(REfreshToken/Titan/Titan.Client/_Imports.razor]

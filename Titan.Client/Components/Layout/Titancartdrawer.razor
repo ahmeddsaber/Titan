@@ -1,0 +1,199 @@
+﻿@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@using Titan.Client.Services.Models
+@inject CartService Cart
+@inject ToastService Toast
+@inject AuthService Auth
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<!-- overlay -->
+<div class="@(_open ? "cart-overlay active" : "cart-overlay")" @onclick="Close"></div>
+
+<!-- drawer -->
+<div class="cart-drawer @(_open ? "open" : "")" id="titan-cart">
+
+    <!-- header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid var(--black-border);flex-shrink:0">
+        <div>
+            <h3 style="margin:0;font-size:1.05rem">Your Cart</h3>
+            <p style="color:var(--silver-dim);font-size:.78rem;margin:0">@Cart.Count items</p>
+        </div>
+        <button @onclick="Close" style="background:none;border:none;color:var(--silver);cursor:pointer;font-size:1.1rem"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- items -->
+    <div style="flex:1;overflow-y:auto;padding:14px">
+        @if (Cart.Current is null || !Cart.Current.Items.Any())
+        {
+            <div style="text-align:center;padding:60px 20px;color:var(--silver-dim)">
+                <i class="fas fa-shopping-bag" style="font-size:2.5rem;opacity:.2;margin-bottom:14px;display:block"></i>
+                <p style="margin-bottom:16px">Your cart is empty</p>
+                <a href="/shop" class="btn btn-gold btn-sm" @onclick="Close">Shop Now</a>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Cart.Current.Items)
+            {
+                <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--black-border)">
+                    <a href="/product/@item.ProductSlug" @onclick="Close">
+                        <img src="@item.ProductImageUrl" alt="@item.ProductName"
+                             style="width:68px;height:86px;object-fit:cover;border-radius:6px;border:1px solid var(--black-border)" />
+                    </a>
+                    <div style="flex:1;min-width:0">
+                        <a href="/product/@item.ProductSlug" @onclick="Close"
+                           style="color:var(--white);text-decoration:none;font-size:.88rem;font-weight:600;display:block;margin-bottom:3px">@item.ProductName</a>
+                        @if (!string.IsNullOrEmpty(item.VariantInfo))
+                        {
+                            <p style="color:var(--silver-dim);font-size:.75rem;margin-bottom:5px">@item.VariantInfo</p>
+                        }
+                        <p style="color:var(--gold);font-weight:700;margin-bottom:8px">$@item.UnitPrice.ToString("F2")</p>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <button class="qty-btn" @onclick="() => Decr(item)" disabled="@_busy"><i class="fas fa-minus"></i></button>
+                            <span style="color:var(--white);font-weight:600;min-width:22px;text-align:center">@item.Quantity</span>
+                            <button class="qty-btn" @onclick="() => Incr(item)" disabled="@(_busy || item.Quantity >= item.StockQuantity)"><i class="fas fa-plus"></i></button>
+                            <button class="qty-btn" @onclick="() => Remove(item)" style="margin-left:auto;color:var(--danger)"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- footer -->
+    @if (Cart.Current?.Items.Any() == true)
+    {
+        <div style="padding:18px 22px;border-top:1px solid var(--black-border);flex-shrink:0">
+            <!-- coupon -->
+            <div style="display:flex;gap:8px;margin-bottom:14px">
+                <input type="text" class="form-control" placeholder="Coupon code"
+                       @bind="_coupon" style="font-size:.82rem;padding:8px 12px" />
+                <button class="btn btn-outline-gold btn-sm" @onclick="ApplyCoupon" disabled="@_applying">
+                    @if (_applying)
+                    {
+                        <i class="fas fa-spinner fa-spin"></i>
+                    }
+                    else
+                    {
+
+                        <span>Apply</span>
+                    }
+                </button>
+            </div>
+            <!-- totals -->
+            <div style="display:flex;flex-direction:column;gap:7px;font-size:.85rem;margin-bottom:16px">
+                <div style="display:flex;justify-content:space-between;color:var(--silver-dim)">
+                    <span>Subtotal</span><span>$@Cart.Current.SubTotal.ToString("F2")</span>
+                </div>
+                @if (Cart.Current.DiscountAmount > 0)
+                {
+                    <div style="display:flex;justify-content:space-between;color:var(--success)">
+                        <span>Discount (@Cart.Current.AppliedCouponCode)</span>
+                        <span>-$@Cart.Current.DiscountAmount.ToString("F2")</span>
+                    </div>
+                }
+                <div style="display:flex;justify-content:space-between;color:var(--silver-dim)">
+                    <span>Shipping</span>
+                    <span>@(Cart.Current.ShippingCost == 0 ? "FREE" : "$" + Cart.Current.ShippingCost.ToString("F2"))</span>
+                </div>
+                <hr class="divider" style="margin:6px 0" />
+                <div style="display:flex;justify-content:space-between;color:var(--white);font-size:1rem;font-weight:700">
+                    <span>Total</span>
+                    <span style="color:var(--gold)">$@Cart.Current.TotalAmount.ToString("F2")</span>
+                </div>
+            </div>
+            <a href="/checkout" class="btn btn-gold btn-block" @onclick="Close">
+                <i class="fas fa-lock"></i> Checkout
+            </a>
+            <a href="/cart" class="btn btn-outline-silver btn-block" style="margin-top:8px" @onclick="Close">View Full Cart</a>
+        </div>
+    }
+</div>
+
+<style>
+    .cart-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.7);
+        z-index: 1099;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .3s;
+        backdrop-filter: blur(4px)
+    }
+
+        .cart-overlay.active {
+            opacity: 1;
+            pointer-events: all
+        }
+
+    .cart-drawer {
+        position: fixed;
+        right: -430px;
+        top: 0;
+        width: 420px;
+        max-width: 100vw;
+        height: 100vh;
+        background: var(--black-card);
+        border-left: 1px solid var(--black-border);
+        z-index: 1100;
+        transition: right .35s cubic-bezier(.4,0,.2,1);
+        display: flex;
+        flex-direction: column
+    }
+
+        .cart-drawer.open {
+            right: 0;
+            box-shadow: -6px 0 32px rgba(0,0,0,.5)
+        }
+
+    .qty-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 4px;
+        border: 1px solid var(--black-border);
+        background: var(--black);
+        color: var(--silver);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .68rem;
+        transition: var(--tr)
+    }
+
+        .qty-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold)
+        }
+
+        .qty-btn:disabled {
+            opacity: .35;
+            cursor: not-allowed
+        }
+</style>
+
+@code {
+    bool _open, _busy, _applying;
+    string _coupon = "";
+
+    protected override void OnInitialized()
+    { Cart.Changed += StateHasChanged; }
+
+    [JSInvokable] public void Open() { _open = true; StateHasChanged(); }
+    void Close() { _open = false; }
+
+    async Task Decr(CartItemDto item) { _busy = true; await Cart.UpdateQtyAsync(item.Id, item.Quantity - 1); _busy = false; }
+    async Task Incr(CartItemDto item) { _busy = true; await Cart.UpdateQtyAsync(item.Id, item.Quantity + 1); _busy = false; }
+    async Task Remove(CartItemDto item) { await Cart.RemoveAsync(item.Id); Toast.Info("Removed from cart."); }
+
+    async Task ApplyCoupon()
+    {
+        if (string.IsNullOrWhiteSpace(_coupon)) return;
+        _applying = true;
+        if (await Cart.ApplyCouponAsync(_coupon)) Toast.Success("Coupon applied!");
+        else Toast.Error("Invalid or expired coupon.");
+        _applying = false;
+    }
+}

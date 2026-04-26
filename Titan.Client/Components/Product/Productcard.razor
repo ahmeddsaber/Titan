@@ -1,0 +1,125 @@
+﻿@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@inject CartService Cart
+@inject WishlistService Wishlist
+@inject AuthService Auth
+@inject ToastService Toast
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="product-card" @onclick="Go">
+
+    <div style="position:relative;overflow:hidden;aspect-ratio:3/4">
+        <img src="@(Product.MainImageUrl.Length > 0 ? Product.MainImageUrl : "/images/placeholder.jpg")"
+             alt="@Product.Name" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" />
+
+        @if (Product.HasDiscount)
+        {
+            <span class="product-card__badge">-@((int)Product.DiscountPercentage)%</span>
+        }
+
+        @if (Auth.IsAuthenticated)
+        {
+            <button class="product-card__wishlist @(Wishlist.Has(Product.Id) ? "active" : "")"
+                    @onclick:stopPropagation @onclick="ToggleWishlist">
+                <i class="@(Wishlist.Has(Product.Id) ? "fas" : "far") fa-heart"></i>
+            </button>
+        }
+
+        <div class="card-actions">
+            <button class="btn btn-gold btn-sm" style="flex:1" @onclick:stopPropagation @onclick="AddCart" disabled="@(Product.StockQuantity == 0 || _adding)">
+                @if (_adding)
+                {
+                    <i class="fas fa-spinner fa-spin"></i>
+                }
+                else
+                {
+
+                    <i class="fas fa-bag-shopping"></i>
+                }
+                @(Product.StockQuantity == 0 ? "Out of Stock" : "Add to Cart")
+            </button>
+            <button class="btn btn-outline-silver btn-sm"
+                    @onclick:stopPropagation
+                    @onclick="() => JS.InvokeVoidAsync(`TitanJS.shareWhatsApp`, Product.Name,$" ${Product.CurrentPrice:F2}",Nav.BaseUri+`product /`+Product.Slug)">
+                <i class="fab fa-whatsapp"></i>
+            </button>
+        </div>
+    </div>
+
+    <div style="padding:13px">
+        <p style="font-size:.72rem;color:var(--silver-dim);margin-bottom:3px">@Product.Category?.Name</p>
+        <h3 style="font-size:.92rem;font-weight:600;color:var(--white);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@Product.Name</h3>
+
+        <div style="display:flex;gap:2px;margin-bottom:7px">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <i class="@(i <= Math.Round(Product.AverageRating) ? "fas" : "far") fa-star" style="color:var(--gold);font-size:.72rem"></i>
+            }
+            <span style="color:var(--silver-dim);font-size:.72rem;margin-left:4px">(@Product.ReviewCount)</span>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px">
+            <span style="color:var(--gold);font-weight:700;font-size:1.05rem">$@Product.CurrentPrice.ToString("F2")</span>
+            @if (Product.HasDiscount)
+            {
+                <span style="color:var(--silver-dim);text-decoration:line-through;font-size:.82rem">$@Product.Price.ToString("F2")</span>
+            }
+        </div>
+
+        @if (Product.StockQuantity > 0 && Product.StockQuantity <= 5)
+        {
+            <p style="font-size:.72rem;color:var(--warning);margin-top:5px"><i class="fas fa-fire"></i> Only @Product.StockQuantity left!</p>
+        }
+        @if (Product.StockQuantity == 0)
+        {
+            <p style="font-size:.72rem;color:var(--danger);margin-top:5px">Out of stock</p>
+        }
+    </div>
+</div>
+
+<style>
+    .card-actions {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        gap: 6px;
+        padding: 10px;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: all .25s
+    }
+
+    .product-card:hover .card-actions {
+        opacity: 1;
+        transform: translateY(0)
+    }
+</style>
+
+@code {
+    [Parameter, EditorRequired] public ProductDto Product { get; set; } = null!;
+    [Parameter] public EventCallback OnWishlistChanged { get; set; }
+    bool _adding;
+
+    void Go() => Nav.NavigateTo($"/product/{Product.Slug}");
+
+    async Task AddCart()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        _adding = true;
+        var r = await Cart.AddAsync(Product.Id);
+        if (r?.Success == true) Toast.Success($"{Product.Name} added to cart!");
+        else Toast.Error(r?.Message ?? "Could not add to cart.");
+        _adding = false;
+    }
+
+    async Task ToggleWishlist()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        var added = await Wishlist.ToggleAsync(Product.Id);
+        Toast.Info(added ? "Added to wishlist ❤️" : "Removed from wishlist");
+        await OnWishlistChanged.InvokeAsync();
+    }
+}

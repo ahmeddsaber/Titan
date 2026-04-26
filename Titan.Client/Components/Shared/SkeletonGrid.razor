@@ -1,0 +1,33 @@
+﻿@* ── SkeletonGrid ── *@
+<div class="grid grid-4">
+    @for (int i = 0; i < Count; i++)
+    {
+        <div>
+            <div class="skel" style="aspect-ratio:3/4;border-radius:var(--r-lg);margin-bottom:12px"></div>
+            <div class="skel" style="height:13px;width:65%;margin-bottom:8px;border-radius:4px"></div>
+            <div class="skel" style="height:18px;width:40%;border-radius:4px"></div>
+        </div>
+    }
+</div>
+
+<style>
+    .skel {
+        background: linear-gradient(90deg,var(--black-card) 25%,var(--black-border) 50%,var(--black-card) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.4s infinite
+    }
+    @keyframes shimmer {
+        0%
+
+    {
+        background-position: 200% 0
+    }
+
+    100% {
+        background-position: -200% 0
+    }
+
+    }
+</style>
+
+@code { [Parameter] public int Count { get; set; } = 8; }

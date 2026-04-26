@@ -1,0 +1,109 @@
+﻿@inject IJSRuntime JS
+
+<footer style="background:var(--black-card);border-top:1px solid var(--black-border);padding:60px 0 28px;margin-top:auto">
+    <div class="container">
+        <div class="grid grid-4" style="margin-bottom:44px;gap:32px">
+
+            <div>
+                <div class="brand-font" style="font-size:2.2rem;color:var(--white);letter-spacing:6px;margin-bottom:10px">TIT<span style="color:var(--gold)">A</span>N</div>
+                <p style="color:var(--silver-dim);font-size:.85rem;margin-bottom:18px;font-style:italic">Unleash The Titan</p>
+                <div style="display:flex;gap:10px">
+                    @foreach (var (icon, action) in _social)
+                    {
+                        <button @onclick="() => action()" class="social-btn"><i class="@icon"></i></button>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <h5 class="footer-heading">Shop</h5>
+                @foreach (var (l, h) in new[] { ("Men", "/shop?category=men"), ("Women", "/shop?category=women"), ("Accessories", "/shop?category=accessories"), ("Sale", "/shop?hasDiscount=true"), ("New Arrivals", "/shop?sortBy=newest") })
+                {
+                    <a href="@h" class="footer-link">@l</a>
+                }
+            </div>
+
+            <div>
+                <h5 class="footer-heading">Account</h5>
+                @foreach (var (l, h) in new[] { ("My Profile", "/profile"), ("My Orders", "/orders"), ("Wishlist", "/wishlist"), ("Cart", "/cart"), ("Login", "/login") })
+                {
+                    <a href="@h" class="footer-link">@l</a>
+                }
+            </div>
+
+            <div>
+                <h5 class="footer-heading">Contact</h5>
+                <div style="display:flex;flex-direction:column;gap:10px;font-size:.85rem;color:var(--silver-dim)">
+                    <span><i class="fas fa-envelope" style="color:var(--gold);margin-right:8px"></i>support@titan.com</span>
+                    <span><i class="fas fa-phone" style="color:var(--gold);margin-right:8px"></i>+1 800 TITAN01</span>
+                    <span><i class="fas fa-clock" style="color:var(--gold);margin-right:8px"></i>Mon–Sat 9AM–9PM</span>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider divider-gold" />
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding-top:20px">
+            <p style="color:var(--silver-dim);font-size:.78rem">© @DateTime.Now.Year TITAN. All rights reserved.</p>
+            <div style="display:flex;gap:20px">
+                @foreach (var (l, h) in new[] { ("Privacy", "/privacy"), ("Terms", "/terms"), ("Returns", "/returns") })
+                {
+                    <a href="@h" class="footer-link" style="font-size:.78rem">@l</a>
+                }
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .social-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid var(--black-border);
+        background: transparent;
+        color: var(--silver);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .88rem;
+        transition: var(--tr)
+    }
+
+        .social-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold)
+        }
+
+    .footer-heading {
+        font-size: .72rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 16px
+    }
+
+    .footer-link {
+        display: block;
+        color: var(--silver-dim);
+        text-decoration: none;
+        font-size: .85rem;
+        margin-bottom: 8px;
+        transition: var(--tr)
+    }
+
+        .footer-link:hover {
+            color: var(--gold)
+        }
+</style>
+
+@code {
+    (string icon, Action action)[] _social => new[]
+    {
+    ("fab fa-instagram",       (Action)(() => JS.InvokeVoidAsync("open","https://instagram.com","_blank"))),
+    ("fab fa-facebook-f",      (Action)(() => JS.InvokeVoidAsync("open","https://facebook.com","_blank"))),
+    ("fab fa-whatsapp",        (Action)(() => JS.InvokeVoidAsync("open","https://wa.me/1234567890","_blank"))),
+    ("fab fa-telegram-plane",  (Action)(() => JS.InvokeVoidAsync("open","https://t.me/titan_brand","_blank"))),
+  };
+}

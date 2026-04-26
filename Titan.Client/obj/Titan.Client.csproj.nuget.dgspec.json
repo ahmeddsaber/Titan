@@ -60,7 +60,7 @@
               "target": "Package",
               "version": "[9.0.7, )"
             },
-            "Microsoft.AspNetCore.SignalR.Client.Core": {
+            "Microsoft.AspNetCore.SignalR.Client": {
               "target": "Package",
               "version": "[9.0.10, )"
             },
