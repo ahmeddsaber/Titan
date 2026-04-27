@@ -1,0 +1,193 @@
+﻿@page "/admin/orders"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.Models
+@using Titan.Client.Services.AppServices
+@inject OrderService Orders
+@inject ToastService Toast
+@inject AuthService  Auth
+@inject NavigationManager Nav
+
+<PageTitle>Orders — Admin TITAN</PageTitle>
+@if (!Auth.IsAdmin) { Nav.NavigateTo("/"); return; }
+
+<div class="main-content" style="padding-top:90px">
+  <div style="display:flex">
+    <AdminSidebar Active="orders" />
+    <div style="flex:1;padding:36px;min-width:0">
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:14px">
+        <div><h1 style="font-size:2rem;margin-bottom:4px">Orders</h1><p style="color:var(--silver-dim)">@_total orders total</p></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          @foreach (var (lbl,val) in _tabs)
+          {
+            <button class="btn @(_statusFilter==val?"btn-gold":"btn-outline-silver") btn-sm" @onclick="()=>SetStatus(val)">@lbl</button>
+          }
+        </div>
+      </div>
+
+      @if (_loading)
+      { <div style="text-align:center;padding:60px"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--gold)"></i></div> }
+      else
+      {
+        <div class="card" style="padding:0;overflow:hidden">
+          <table class="t-admin">
+            <thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody>
+              @foreach (var o in _orders)
+              {
+                <tr>
+                  <td style="color:var(--gold);font-weight:700;font-family:monospace">@o.OrderNumber</td>
+                  <td>
+                    <p style="color:var(--white);font-size:.87rem;font-weight:600">@o.ShippingFullName</p>
+                    <p style="color:var(--silver-dim);font-size:.75rem">@o.ShippingCity, @o.ShippingCountry</p>
+                  </td>
+                  <td style="color:var(--silver)">@o.Items.Count</td>
+                  <td style="color:var(--gold);font-weight:700">$@o.TotalAmount.ToString("F2")</td>
+                  <td><span class="badge @SBadge(o.Status)">@o.Status</span></td>
+                  <td style="color:var(--silver-dim);font-size:.78rem">@o.CreatedAt.ToString("MMM dd, yyyy")</td>
+                  <td>
+                    <button class="btn btn-outline-gold btn-sm" @onclick="()=>Open(o)"><i class="fas fa-edit"></i> Manage</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          @if (!_orders.Any())
+          { <div style="text-align:center;padding:60px;color:var(--silver-dim)"><i class="fas fa-inbox" style="font-size:2rem;opacity:.2;margin-bottom:12px;display:block"></i>No orders found</div> }
+        </div>
+
+        @if (_totalPages > 1)
+        {
+          <div style="display:flex;gap:7px;justify-content:center;margin-top:22px">
+            @for(int i=1;i<=_totalPages;i++){var pg=i;<button class="page-btn @(_page==pg?"active":"")" @onclick="()=>GoPage(pg)">@pg</button>}
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+<!-- ORDER MODAL -->
+@if (_sel is not null)
+{
+  <div class="modal-bg" @onclick="()=>_sel=null">
+    <div class="card modal-box" @onclick:stopPropagation>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3>@_sel.OrderNumber</h3>
+        <button @onclick="()=>_sel=null" style="background:none;border:none;color:var(--silver);cursor:pointer;font-size:1.1rem"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- customer -->
+      <div style="background:var(--black);border-radius:var(--r);padding:14px;margin-bottom:18px">
+        <h4 style="font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Customer</h4>
+        <p style="color:var(--white);font-weight:600">@_sel.ShippingFullName</p>
+        <p style="color:var(--silver-dim);font-size:.85rem">@_sel.ShippingPhone</p>
+        <p style="color:var(--silver-dim);font-size:.85rem;margin-top:6px">@_sel.ShippingAddress, @_sel.ShippingCity, @_sel.ShippingCountry</p>
+      </div>
+
+      <!-- items -->
+      <div style="margin-bottom:18px">
+        <h4 style="font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Items (@_sel.Items.Count)</h4>
+        @foreach (var item in _sel.Items)
+        {
+          <div style="display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--black-border)">
+            <img src="@item.ProductImageUrl" style="width:42px;height:54px;object-fit:cover;border-radius:4px"/>
+            <div style="flex:1">
+              <p style="color:var(--white);font-size:.87rem;font-weight:600">@item.ProductName</p>
+              @if(!string.IsNullOrEmpty(item.VariantInfo)){<p style="color:var(--silver-dim);font-size:.75rem">@item.VariantInfo</p>}
+              <p style="color:var(--silver-dim);font-size:.8rem">Qty: @item.Quantity × $@item.UnitPrice.ToString("F2")</p>
+            </div>
+            <p style="color:var(--gold);font-weight:700">$@item.TotalPrice.ToString("F2")</p>
+          </div>
+        }
+        <p style="text-align:right;color:var(--white);font-weight:700;margin-top:10px">Total: <span style="color:var(--gold)">$@_sel.TotalAmount.ToString("F2")</span></p>
+      </div>
+
+      <!-- update status -->
+      <div style="background:var(--black);border-radius:var(--r);padding:14px">
+        <h4 style="font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Update Status</h4>
+        <select class="form-control" @bind="_newStatus" style="margin-bottom:10px">
+          @foreach (OrderStatus s in Enum.GetValues<OrderStatus>())
+          { <option value="@s">@s</option> }
+        </select>
+        <textarea class="form-control" rows="2" @bind="_statusNote" placeholder="Optional note…" style="margin-bottom:12px"></textarea>
+        <button class="btn btn-gold" @onclick="UpdateStatus" disabled="@_updating">
+          @if(_updating){<i class="fas fa-spinner fa-spin"></i>}else{<i class="fas fa-check"></i>} Update Status
+        </button>
+      </div>
+
+      @if (_sel.StatusHistory.Any())
+      {
+        <div style="margin-top:18px">
+          <h4 style="font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">History</h4>
+          @foreach (var h in _sel.StatusHistory.OrderByDescending(x=>x.CreatedAt))
+          {
+            <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--black-border)">
+              <span class="badge @SBadge(h.Status)" style="font-size:.72rem">@h.Status</span>
+              <div>
+                @if(!string.IsNullOrEmpty(h.Note)){<p style="color:var(--silver);font-size:.8rem">@h.Note</p>}
+                <p style="color:var(--silver-dim);font-size:.72rem">@h.CreatedAt.ToString("MMM dd HH:mm")</p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<style>
+  .t-admin{width:100%;border-collapse:collapse}
+  .t-admin th{padding:11px 15px;text-align:left;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--silver-dim);border-bottom:1px solid var(--black-border);font-weight:600}
+  .t-admin td{padding:14px 15px;border-bottom:1px solid rgba(34,34,34,.5);font-size:.88rem;color:var(--silver)}
+  .t-admin tr:hover td{background:rgba(255,255,255,.015)}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;align-items:center;justify-content:center;padding:24px}
+  .modal-box{width:100%;max-width:620px;max-height:90vh;overflow-y:auto}
+  .page-btn{width:38px;height:38px;border-radius:var(--r);border:1px solid var(--black-border);background:var(--black-card);color:var(--silver);cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;font-size:.85rem}
+  .page-btn:hover,.page-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
+</style>
+
+@code {
+  List<OrderDto> _orders=new(); OrderDto? _sel;
+  bool _loading=true,_updating; int _page=1,_totalPages=1,_total;
+  OrderStatus? _statusFilter; OrderStatus _newStatus; string _statusNote="";
+
+  readonly (string lbl, OrderStatus? val)[] _tabs =
+  [
+    ("All",null),("Pending",OrderStatus.Pending),("Confirmed",OrderStatus.Confirmed),
+    ("Processing",OrderStatus.Processing),("Shipped",OrderStatus.Shipped),
+    ("Delivered",OrderStatus.Delivered),("Cancelled",OrderStatus.Cancelled),
+  ];
+
+  protected override async Task OnInitializedAsync() { if(!Auth.IsAdmin)return; await Load(); }
+
+  async Task Load()
+  {
+    _loading=true;
+    var r=await Orders.GetAllAsync(_page,20,_statusFilter);
+    _orders=r?.Items??new(); _total=r?.TotalCount??0; _totalPages=r?.TotalPages??1;
+    _loading=false;
+  }
+
+  async Task SetStatus(OrderStatus? s){_statusFilter=s;_page=1;await Load();}
+  async Task GoPage(int p){_page=p;await Load();}
+  void Open(OrderDto o){_sel=o;_newStatus=o.Status;_statusNote="";}
+
+  async Task UpdateStatus()
+  {
+    if(_sel is null) return;
+    _updating=true;
+    var r=await Orders.UpdateStatusAsync(_sel.Id,_newStatus,_statusNote);
+    if(r?.Success==true){Toast.Success($"Order updated to {_newStatus}.");_sel=r.Data;await Load();}
+    else Toast.Error(r?.Message??"Failed.");
+    _updating=false;
+  }
+
+  static string SBadge(OrderStatus s)=>s switch
+  {
+    OrderStatus.Delivered=>"badge-success",
+    OrderStatus.Cancelled or OrderStatus.Failed=>"badge-danger",
+    OrderStatus.Shipped or OrderStatus.OutForDelivery=>"badge-info",
+    _=>"badge-warning"
+  };
+}
