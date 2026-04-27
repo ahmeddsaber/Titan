@@ -1,0 +1,160 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\TestAPI(REfreshToken\\Titan\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DB1A6B96-10BC-42E7-B903-07845C661790}|Titan.Client\\Titan.Client.csproj|d:\\testapi(refreshtoken\\titan\\titan.client\\pages\\user\\orders.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DB1A6B96-10BC-42E7-B903-07845C661790}|Titan.Client\\Titan.Client.csproj|solutionrelative:titan.client\\pages\\user\\orders.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Cluade Code App\\Orders.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB1A6B96-10BC-42E7-B903-07845C661790}|Titan.Client\\Titan.Client.csproj|d:\\testapi(refreshtoken\\titan\\titan.client\\pages\\user\\wishlist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DB1A6B96-10BC-42E7-B903-07845C661790}|Titan.Client\\Titan.Client.csproj|solutionrelative:titan.client\\pages\\user\\wishlist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Cluade Code App\\Wishlist.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB1A6B96-10BC-42E7-B903-07845C661790}|Titan.Client\\Titan.Client.csproj|d:\\testapi(refreshtoken\\titan\\titan.client\\pages\\user\\cart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DB1A6B96-10BC-42E7-B903-07845C661790}|Titan.Client\\Titan.Client.csproj|solutionrelative:titan.client\\pages\\user\\cart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Cluade Code App\\Cart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DB1A6B96-10BC-42E7-B903-07845C661790}|Titan.Client\\Titan.Client.csproj|d:\\testapi(refreshtoken\\titan\\titan.client\\pages\\shop\\checkout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DB1A6B96-10BC-42E7-B903-07845C661790}|Titan.Client\\Titan.Client.csproj|solutionrelative:titan.client\\pages\\shop\\checkout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Cluade Code App\\Checkout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Orders.razor",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Pages\\User\\Orders.razor",
+              "RelativeDocumentMoniker": "Titan.Client\\Pages\\User\\Orders.razor",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Pages\\User\\Orders.razor",
+              "RelativeToolTip": "Titan.Client\\Pages\\User\\Orders.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-27T18:47:06.918Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Orders.razor",
+              "DocumentMoniker": "D:\\Cluade Code App\\Orders.razor",
+              "RelativeDocumentMoniker": "..\\..\\Cluade Code App\\Orders.razor",
+              "ToolTip": "D:\\Cluade Code App\\Orders.razor",
+              "RelativeToolTip": "..\\..\\Cluade Code App\\Orders.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-27T18:46:46.632Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Wishlist.razor",
+              "DocumentMoniker": "D:\\Cluade Code App\\Wishlist.razor",
+              "RelativeDocumentMoniker": "..\\..\\Cluade Code App\\Wishlist.razor",
+              "ToolTip": "D:\\Cluade Code App\\Wishlist.razor",
+              "RelativeToolTip": "..\\..\\Cluade Code App\\Wishlist.razor",
+              "ViewState": "AgIAACAAAAAAAAAAAAAcwDYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-27T18:46:02.342Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Wishlist.razor",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Pages\\User\\Wishlist.razor",
+              "RelativeDocumentMoniker": "Titan.Client\\Pages\\User\\Wishlist.razor",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Pages\\User\\Wishlist.razor*",
+              "RelativeToolTip": "Titan.Client\\Pages\\User\\Wishlist.razor*",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAADgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-27T18:45:48.145Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Cart.razor",
+              "DocumentMoniker": "D:\\Cluade Code App\\Cart.razor",
+              "RelativeDocumentMoniker": "..\\..\\Cluade Code App\\Cart.razor",
+              "ToolTip": "D:\\Cluade Code App\\Cart.razor",
+              "RelativeToolTip": "..\\..\\Cluade Code App\\Cart.razor",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAiwJQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-27T18:39:33.375Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Cart.razor",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Pages\\User\\Cart.razor",
+              "RelativeDocumentMoniker": "Titan.Client\\Pages\\User\\Cart.razor",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Pages\\User\\Cart.razor*",
+              "RelativeToolTip": "Titan.Client\\Pages\\User\\Cart.razor*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-27T18:39:23.465Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Checkout.razor",
+              "DocumentMoniker": "D:\\Cluade Code App\\Checkout.razor",
+              "RelativeDocumentMoniker": "..\\..\\Cluade Code App\\Checkout.razor",
+              "ToolTip": "D:\\Cluade Code App\\Checkout.razor",
+              "RelativeToolTip": "..\\..\\Cluade Code App\\Checkout.razor",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAiwGIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-27T18:36:16.348Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Checkout.razor",
+              "DocumentMoniker": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Pages\\Shop\\Checkout.razor",
+              "RelativeDocumentMoniker": "Titan.Client\\Pages\\Shop\\Checkout.razor",
+              "ToolTip": "D:\\TestAPI(REfreshToken\\Titan\\Titan.Client\\Pages\\Shop\\Checkout.razor*",
+              "RelativeToolTip": "Titan.Client\\Pages\\Shop\\Checkout.razor*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-04-27T18:35:53.397Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

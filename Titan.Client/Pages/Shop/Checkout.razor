@@ -1,0 +1,116 @@
+﻿@page "/checkout"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@inject CartService Cart
+@inject OrderService Orders
+@inject AuthService Auth
+@inject ToastService Toast
+@inject NavigationManager Nav
+
+<PageTitle>Checkout — TITAN</PageTitle>
+
+<div class="main-content" style="padding-top:92px;padding-bottom:60px">
+    <div class="container">
+        <h1 style="font-size:2rem;margin-bottom:36px">Checkout</h1>
+
+        <div class="grid grid-2" style="gap:40px;align-items:start">
+
+            <!-- LEFT: SHIPPING -->
+            <div>
+                <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:22px"><i class="fas fa-truck"></i> Shipping Information</h3>
+                <div class="card">
+                    <div class="grid grid-2" style="gap:14px;margin-bottom:14px">
+                        <div class="form-group" style="margin:0"><label class="form-label">Full Name *</label><input class="form-control" @bind="_name" /></div>
+                        <div class="form-group" style="margin:0"><label class="form-label">Phone *</label><input class="form-control" @bind="_phone" /></div>
+                    </div>
+                    <div class="form-group"><label class="form-label">Address *</label><input class="form-control" @bind="_address" placeholder="123 Main Street" /></div>
+                    <div class="grid grid-2" style="gap:14px">
+                        <div class="form-group" style="margin-bottom:0"><label class="form-label">City *</label><input class="form-control" @bind="_city" /></div>
+                        <div class="form-group" style="margin-bottom:0"><label class="form-label">Country *</label><input class="form-control" @bind="_country" /></div>
+                    </div>
+                    <div class="form-group" style="margin-top:14px"><label class="form-label">Postal Code</label><input class="form-control" @bind="_zip" /></div>
+                    <div class="form-group"><label class="form-label">Order Notes</label><textarea class="form-control" rows="2" @bind="_notes" placeholder="Any special instructions…"></textarea></div>
+                </div>
+            </div>
+
+            <!-- RIGHT: SUMMARY -->
+            <div>
+                <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:22px"><i class="fas fa-receipt"></i> Order Summary</h3>
+                <div class="card" style="margin-bottom:18px">
+                    @foreach (var item in Cart.Current?.Items ?? new())
+                    {
+                        <div style="display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--black-border)">
+                            <img src="@item.ProductImageUrl" style="width:54px;height:68px;object-fit:cover;border-radius:5px" />
+                            <div style="flex:1">
+                                <p style="font-weight:600;color:var(--white);font-size:.87rem;margin-bottom:3px">@item.ProductName</p>
+                                @if (!string.IsNullOrEmpty(item.VariantInfo))
+                                {
+                                    <p style="font-size:.75rem;color:var(--silver-dim);margin-bottom:3px">@item.VariantInfo</p>
+                                }
+                                <p style="font-size:.82rem;color:var(--silver-dim)">Qty: @item.Quantity</p>
+                            </div>
+                            <p style="color:var(--gold);font-weight:700">$@item.TotalPrice.ToString("F2")</p>
+                        </div>
+                    }
+                    <div style="padding-top:14px;display:flex;flex-direction:column;gap:8px;font-size:.85rem">
+                        <div style="display:flex;justify-content:space-between;color:var(--silver-dim)"><span>Subtotal</span><span>$@Cart.Current?.SubTotal.ToString("F2")</span></div>
+                        @if (Cart.Current?.DiscountAmount > 0)
+                        {
+                            <div style="display:flex;justify-content:space-between;color:var(--success)"><span>Discount</span><span>-$@Cart.Current.DiscountAmount.ToString("F2")</span></div>
+                        }
+                        <div style="display:flex;justify-content:space-between;color:var(--silver-dim)"><span>Shipping</span><span>@(Cart.Current?.ShippingCost == 0 ? "FREE" : "$" + Cart.Current?.ShippingCost.ToString("F2"))</span></div>
+                        <hr class="divider" style="margin:5px 0" />
+                        <div style="display:flex;justify-content:space-between;font-size:1.05rem;font-weight:700;color:var(--white)">
+                            <span>Total</span><span style="color:var(--gold)">$@Cart.Current?.TotalAmount.ToString("F2")</span>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(_err))
+                {
+                    <div style="background:rgba(229,62,62,.1);border:1px solid var(--danger);border-radius:var(--r);padding:11px 14px;margin-bottom:14px;color:#FC8181;font-size:.85rem">@_err</div>
+                }
+
+                <button class="btn btn-gold btn-block btn-lg" @onclick="PlaceOrder" disabled="@_placing">
+                    @if (_placing)
+                    {
+                        <i class="fas fa-spinner fa-spin"></i>
+                    }
+                    else
+                    {
+
+                        <i class="fas fa-lock"></i>
+                    }
+                    Place Order — $@Cart.Current?.TotalAmount.ToString("F2")
+                </button>
+                <p style="text-align:center;font-size:.72rem;color:var(--silver-dim);margin-top:10px"><i class="fas fa-shield-alt"></i> Secure SSL checkout</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    string _name = "", _phone = "", _address = "", _city = "", _country = "", _zip = "", _notes = "", _err = "";
+    bool _placing;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        await Cart.LoadAsync();
+        if (!Cart.Current?.Items.Any() ?? true) Nav.NavigateTo("/cart");
+        _name = Auth.User?.FullName ?? "";
+        _phone = Auth.User?.Phone ?? "";
+    }
+
+    async Task PlaceOrder()
+    {
+        _err = "";
+        if (string.IsNullOrWhiteSpace(_name) || string.IsNullOrWhiteSpace(_address) || string.IsNullOrWhiteSpace(_city) || string.IsNullOrWhiteSpace(_country))
+        { _err = "Please fill in all required fields."; return; }
+        _placing = true;
+        var r = await Orders.CheckoutAsync(new { shippingFullName = _name, shippingPhone = _phone, shippingAddress = _address, shippingCity = _city, shippingCountry = _country, shippingPostalCode = _zip, notes = _notes });
+        if (r?.Success == true && r.Data is not null) { Toast.Success("Order placed! 🎉"); Nav.NavigateTo($"/orders/{r.Data.Id}"); }
+        else { _err = r?.Message ?? "Failed to place order."; }
+        _placing = false;
+    }
+}

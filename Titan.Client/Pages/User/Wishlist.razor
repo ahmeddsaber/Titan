@@ -1,0 +1,56 @@
+﻿@page "/wishlist"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@inject WishlistService Wishlist
+@inject AuthService     Auth
+@inject NavigationManager Nav
+
+<PageTitle>Wishlist — TITAN</PageTitle>
+
+<div class="main-content" style="padding-top:92px;padding-bottom:60px">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:14px">
+      <div>
+        <h1 style="font-size:2rem;margin-bottom:4px">My Wishlist</h1>
+        <p style="color:var(--silver-dim)">@Wishlist.Count saved items</p>
+      </div>
+      @if (Wishlist.Items.Any())
+      { <a href="/shop" class="btn btn-outline-gold btn-sm"><i class="fas fa-shopping-bag"></i> Continue Shopping</a> }
+    </div>
+
+    @if (_loading)
+    {
+      <SkeletonGrid Count="8" />
+    }
+    else if (!Wishlist.Items.Any())
+    {
+      <div class="card" style="text-align:center;padding:80px">
+        <i class="far fa-heart" style="font-size:3.5rem;color:var(--gold);opacity:.25;margin-bottom:22px;display:block"></i>
+        <h3 style="margin-bottom:10px">Your wishlist is empty</h3>
+        <p style="color:var(--silver-dim);margin-bottom:26px">Save items you love and come back anytime.</p>
+        <a href="/shop" class="btn btn-gold"><i class="fas fa-tshirt"></i> Explore Products</a>
+      </div>
+    }
+    else
+    {
+      <div class="grid grid-4">
+        @foreach (var p in Wishlist.Items)
+        { <ProductCard Product="p" OnWishlistChanged="Wishlist.LoadAsync" /> }
+      </div>
+    }
+  </div>
+</div>
+
+@code {
+  bool _loading = true;
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+    Wishlist.Changed += StateHasChanged;
+    await Wishlist.LoadAsync();
+    _loading = false;
+  }
+
+  public void Dispose() => Wishlist.Changed -= StateHasChanged;
+}
