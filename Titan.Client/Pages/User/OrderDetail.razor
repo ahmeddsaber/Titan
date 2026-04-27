@@ -1,0 +1,148 @@
+﻿@page "/orders/{Id:guid}"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@using Titan.Client.Services.Models
+@inject OrderService Orders
+@inject AuthService Auth
+@inject ToastService Toast
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<PageTitle>Order Detail — TITAN</PageTitle>
+
+<div class="main-content" style="padding-top:92px;padding-bottom:60px">
+    <div class="container" style="max-width:840px">
+
+        @if (_loading)
+        {
+            <div style="text-align:center;padding:80px"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--gold)"></i></div>
+        }
+        else if (_order is null)
+        {
+            <div style="text-align:center;padding:80px">
+                <h2 style="margin-bottom:16px">Order not found</h2>
+                <a href="/orders" class="btn btn-gold">My Orders</a>
+            </div>
+        }
+        else
+        {
+            <a href="/orders" style="display:inline-flex;align-items:center;gap:7px;color:var(--silver-dim);text-decoration:none;font-size:.82rem;margin-bottom:22px">
+                <i class="fas fa-arrow-left"></i> Back to Orders
+            </a>
+
+            <!-- HEADER -->
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap;gap:14px">
+                <div>
+                    <h1 style="font-size:1.75rem;margin-bottom:6px">Order @_order.OrderNumber</h1>
+                    <p style="color:var(--silver-dim);font-size:.82rem">Placed @_order.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm")</p>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                    <span class="badge @StatusBadge(_order.Status)" style="font-size:.88rem;padding:7px 14px">@_order.Status</span>
+                    @if (_order.Status is OrderStatus.Pending or OrderStatus.Confirmed)
+                    {
+                        <button class="btn btn-danger btn-sm" @onclick="Cancel"><i class="fas fa-times"></i> Cancel</button>
+                    }
+                    <button class="btn btn-outline-silver btn-sm" @onclick="Print"><i class="fas fa-print"></i> Print</button>
+                </div>
+            </div>
+
+            <div id="order-print">
+                <!-- ITEMS -->
+                <div class="card" style="margin-bottom:20px">
+                    <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:18px"><i class="fas fa-box"></i> Items (@_order.Items.Count)</h3>
+                    @foreach (var item in _order.Items)
+                    {
+                        <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--black-border)">
+                            <img src="@item.ProductImageUrl" style="width:58px;height:74px;object-fit:cover;border-radius:6px;border:1px solid var(--black-border)" />
+                            <div style="flex:1">
+                                <p style="font-weight:600;color:var(--white);margin-bottom:3px">@item.ProductName</p>
+                                @if (!string.IsNullOrEmpty(item.VariantInfo))
+                                {
+                                    <p style="color:var(--silver-dim);font-size:.78rem;margin-bottom:3px">@item.VariantInfo</p>
+                                }
+                                <p style="color:var(--silver-dim);font-size:.82rem">Qty: @item.Quantity × $@item.UnitPrice.ToString("F2")</p>
+                            </div>
+                            <p style="color:var(--gold);font-weight:700">$@item.TotalPrice.ToString("F2")</p>
+                        </div>
+                    }
+                    <div style="padding-top:14px;max-width:280px;margin-left:auto;display:flex;flex-direction:column;gap:8px;font-size:.85rem">
+                        <div style="display:flex;justify-content:space-between;color:var(--silver-dim)"><span>Subtotal</span><span>$@_order.SubTotal.ToString("F2")</span></div>
+                        @if (_order.DiscountAmount > 0)
+                        {
+                            <div style="display:flex;justify-content:space-between;color:var(--success)"><span>Discount (@_order.CouponCode)</span><span>-$@_order.DiscountAmount.ToString("F2")</span></div>
+                        }
+                        <div style="display:flex;justify-content:space-between;color:var(--silver-dim)"><span>Shipping</span><span>@(_order.ShippingCost == 0 ? "FREE" : "$" + _order.ShippingCost.ToString("F2"))</span></div>
+                        <hr class="divider" style="margin:4px 0" />
+                        <div style="display:flex;justify-content:space-between;font-size:1.05rem;font-weight:700;color:var(--white)"><span>Total</span><span style="color:var(--gold)">$@_order.TotalAmount.ToString("F2")</span></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-2" style="gap:20px">
+                    <!-- SHIPPING -->
+                    <div class="card">
+                        <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px"><i class="fas fa-truck"></i> Shipping</h3>
+                        <p style="font-weight:600;color:var(--white);margin-bottom:5px">@_order.ShippingFullName</p>
+                        <p style="color:var(--silver-dim);font-size:.85rem">@_order.ShippingPhone</p>
+                        <p style="color:var(--silver-dim);font-size:.85rem;margin-top:8px">@_order.ShippingAddress<br />@_order.ShippingCity, @_order.ShippingCountry</p>
+                        @if (_order.EstimatedDelivery.HasValue)
+                        {
+                            <div style="margin-top:12px;padding:10px;background:rgba(212,175,55,.06);border-radius:6px;border:1px solid rgba(212,175,55,.15)">
+                                <p style="font-size:.75rem;color:var(--silver-dim)">Estimated Delivery</p>
+                                <p style="color:var(--gold);font-weight:600">@_order.EstimatedDelivery.Value.ToString("MMM dd, yyyy")</p>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- TIMELINE -->
+                    <div class="card">
+                        <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px"><i class="fas fa-history"></i> Status History</h3>
+                        @foreach (var h in _order.StatusHistory.OrderByDescending(x => x.CreatedAt))
+                        {
+                            <div style="display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--black-border)">
+                                <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0"></div>
+                                <div>
+                                    <span class="badge @StatusBadge(h.Status)" style="font-size:.72rem;margin-bottom:4px">@h.Status</span>
+                                    @if (!string.IsNullOrEmpty(h.Note))
+                                    {
+                                        <p style="color:var(--silver);font-size:.8rem">@h.Note</p>
+                                    }
+                                    <p style="color:var(--silver-dim);font-size:.72rem">@h.CreatedAt.ToString("MMM dd, yyyy HH:mm")</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    OrderDto? _order;
+    bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        _order = await Orders.GetByIdAsync(Id);
+        _loading = false;
+    }
+
+    async Task Cancel()
+    {
+        if (_order is null) return;
+        if (await Orders.CancelAsync(_order.Id)) { Toast.Success("Order cancelled."); _order = await Orders.GetByIdAsync(Id); }
+        else Toast.Error("Cannot cancel this order.");
+    }
+
+    async Task Print() => await JS.InvokeVoidAsync("TitanJS.printElement", "order-print");
+
+    static string StatusBadge(OrderStatus s) => s switch
+    {
+        OrderStatus.Delivered => "badge-success",
+        OrderStatus.Cancelled or OrderStatus.Failed => "badge-danger",
+        OrderStatus.Shipped or OrderStatus.OutForDelivery => "badge-info",
+        _ => "badge-warning"
+    };
+}

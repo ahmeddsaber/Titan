@@ -1,0 +1,157 @@
+﻿@page "/profile"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@inject AuthService Auth
+@inject UserService UserSvc
+@inject ToastService Toast
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<PageTitle>My Profile — TITAN</PageTitle>
+
+<div class="main-content" style="padding-top:92px;padding-bottom:60px">
+    <div class="container">
+        <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap">
+
+            <!-- SIDEBAR -->
+            <div style="width:260px;flex-shrink:0">
+                <div class="card" style="text-align:center;padding:28px">
+                    <div style="position:relative;width:90px;margin:0 auto 14px">
+                        @if (!string.IsNullOrEmpty(Auth.User?.ProfileImageUrl))
+                        {
+                            <img src="@Auth.User.ProfileImageUrl" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)" />
+                        }
+                        else
+                        {
+
+                            <div style="width:90px;height:90px;border-radius:50%;background:rgba(212,175,55,.1);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--gold)"><i class="fas fa-user"></i></div>
+                        }
+                    </div>
+                    <h3 style="margin-bottom:3px">@Auth.User?.FullName</h3>
+                    <p style="color:var(--silver-dim);font-size:.82rem;margin-bottom:8px">@Auth.User?.Email</p>
+                    <span class="badge badge-gold">@Auth.User?.Role</span>
+
+                    <hr class="divider" style="margin:18px 0" />
+
+                    <nav style="display:flex;flex-direction:column;gap:3px;text-align:left">
+                        @foreach (var (lbl, ico, href) in _nav)
+                        {
+                            <a href="@href" style="display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:6px;text-decoration:none;color:var(--silver);font-size:.85rem;transition:var(--tr)" class="profile-link">
+                                <i class="@ico" style="width:16px;text-align:center;color:var(--gold)"></i> @lbl
+                            </a>
+                        }
+                        <button @onclick="Logout" style="display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:6px;background:none;border:none;color:var(--danger);font-size:.85rem;cursor:pointer;width:100%;text-align:left">
+                            <i class="fas fa-sign-out-alt" style="width:16px;text-align:center"></i> Logout
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- CONTENT -->
+            <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:20px">
+
+                <!-- Profile form -->
+                <div class="card">
+                    <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px"><i class="fas fa-user-edit"></i> Personal Info</h3>
+                    @if (_saved)
+                    {
+                        <div style="background:rgba(56,161,105,.1);border:1px solid var(--success);border-radius:var(--r);padding:11px 14px;margin-bottom:16px;color:#68D391;font-size:.85rem"><i class="fas fa-check-circle"></i> Profile updated!</div>
+                    }
+                    <div class="grid grid-2" style="gap:14px">
+                        <div class="form-group" style="margin:0"><label class="form-label">First Name</label><input class="form-control" @bind="_fn" /></div>
+                        <div class="form-group" style="margin:0"><label class="form-label">Last Name</label><input class="form-control" @bind="_ln" /></div>
+                    </div>
+                    <div class="form-group" style="margin-top:14px">
+                        <label class="form-label">Email (read-only)</label>
+                        <input class="form-control" value="@Auth.User?.Email" disabled style="opacity:.5" />
+                    </div>
+                    <div class="form-group"><label class="form-label">Phone</label><input class="form-control" @bind="_phone" /></div>
+                    <div class="form-group">
+                        <label class="form-label">Language</label>
+                        <select class="form-control" @bind="_lang">
+                            <option value="en">English</option>
+                            <option value="ar">العربية</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-gold" @onclick="Save" disabled="@_saving">
+                        @if (_saving)
+                        {
+                            <i class="fas fa-spinner fa-spin"></i>
+                        }
+                        else
+                        {
+
+                            <i class="fas fa-save"></i>
+                        }
+ Save Changes
+                    </button>
+                </div>
+
+                <!-- Change password -->
+                <div class="card">
+                    <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px"><i class="fas fa-lock"></i> Change Password</h3>
+                    @if (!string.IsNullOrEmpty(_pwdMsg))
+                    {
+                        <div style="background:@(_pwdOk ? "rgba(56,161,105,.1)" : "rgba(229,62,62,.1)");border:1px solid @(_pwdOk ? "var(--success)" : "var(--danger)");border-radius:var(--r);padding:11px 14px;margin-bottom:16px;color:@(_pwdOk ? "#68D391" : "#FC8181");font-size:.85rem">@_pwdMsg</div>
+                    }
+                    <div class="form-group"><label class="form-label">Current Password</label><input type="password" class="form-control" @bind="_curPwd" /></div>
+                    <div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-control" @bind="_newPwd" /></div>
+                    <div class="form-group"><label class="form-label">Confirm New</label><input type="password" class="form-control" @bind="_cfmPwd" /></div>
+                    <button class="btn btn-outline-gold" @onclick="ChangePwd" disabled="@_changingPwd">Update Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-link:hover {
+        background: rgba(212,175,55,.07);
+        color: var(--gold)
+    }
+</style>
+
+@code {
+    string _fn = "", _ln = "", _phone = "", _lang = "en";
+    string _curPwd = "", _newPwd = "", _cfmPwd = "", _pwdMsg = "";
+    bool _saving, _saved, _changingPwd, _pwdOk;
+
+    readonly (string lbl, string ico, string href)[] _nav =
+    [
+      ("My Orders","fas fa-box","/orders"),
+    ("Wishlist","fas fa-heart","/wishlist"),
+    ("Cart","fas fa-shopping-bag","/cart"),
+    ("Notifications","fas fa-bell","/notifications"),
+  ];
+
+    protected override void OnInitialized()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        var u = Auth.User!;
+        _fn = u.FirstName; _ln = u.LastName; _phone = u.Phone; _lang = u.PreferredLanguage;
+    }
+
+    async Task Save()
+    {
+        _saving = true; _saved = false;
+        var r = await UserSvc.UpdateProfileAsync(_fn, _ln, _phone, _lang);
+        if (r?.Success == true) { _saved = true; Toast.Success("Profile updated!"); }
+        else Toast.Error(r?.Message ?? "Failed.");
+        _saving = false;
+    }
+
+    async Task ChangePwd()
+    {
+        _pwdMsg = ""; _pwdOk = false;
+        if (_newPwd != _cfmPwd) { _pwdMsg = "Passwords don't match."; return; }
+        if (_newPwd.Length < 8) { _pwdMsg = "Password must be ≥ 8 characters."; return; }
+        _changingPwd = true;
+        var r = await Auth.ChangePasswordAsync(_curPwd, _newPwd, _cfmPwd);
+        _pwdOk = r?.Success == true;
+        _pwdMsg = r?.Success == true ? "Password updated successfully!" : (r?.Message ?? "Failed.");
+        if (_pwdOk) { _curPwd = _newPwd = _cfmPwd = ""; }
+        _changingPwd = false;
+    }
+
+    async Task Logout() { await Auth.LogoutAsync(); }
+}

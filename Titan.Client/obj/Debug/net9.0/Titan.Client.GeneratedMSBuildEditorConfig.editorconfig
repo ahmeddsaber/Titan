@@ -96,8 +96,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxDYXJ0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/Notifications.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxOb3RpZmljYXRpb25zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/OrderDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxPcmRlckRldGFpbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/Orders.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxPcmRlcnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/UserProfile.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxVc2VyUHJvZmlsZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/Wishlist.razor]

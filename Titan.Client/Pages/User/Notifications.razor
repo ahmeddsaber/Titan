@@ -1,0 +1,110 @@
+﻿@page "/notifications"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@using Titan.Client.Services.Models
+@inject NotificationService Notifs
+@inject AuthService Auth
+@inject NavigationManager Nav
+@implements IDisposable
+
+<PageTitle>Notifications — TITAN</PageTitle>
+
+<div class="main-content" style="padding-top:92px;padding-bottom:60px">
+    <div class="container" style="max-width:700px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:12px">
+            <div>
+                <h1 style="font-size:2rem;margin-bottom:4px">Notifications</h1>
+                <p style="color:var(--silver-dim)">@Notifs.UnreadCount unread</p>
+            </div>
+            @if (Notifs.Items.Any(n => !n.IsRead))
+            {
+                <button class="btn btn-outline-gold btn-sm" @onclick="Notifs.MarkAllReadAsync">
+                    <i class="fas fa-check-double"></i> Mark all read
+                </button>
+            }
+        </div>
+
+        @if (!Notifs.Items.Any())
+        {
+            <div class="card" style="text-align:center;padding:80px">
+                <i class="fas fa-bell-slash" style="font-size:3.5rem;color:var(--gold);opacity:.25;margin-bottom:20px;display:block"></i>
+                <h3 style="margin-bottom:8px">All caught up!</h3>
+                <p style="color:var(--silver-dim)">We'll notify you about orders, promotions and more.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var grp in Notifs.Items.GroupBy(n => n.CreatedAt.Date).OrderByDescending(g => g.Key))
+            {
+                <div style="margin-bottom:22px">
+                    <p style="font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--silver-dim);margin-bottom:10px;padding-left:4px">
+                        @DateLabel(grp.Key)
+                    </p>
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        @foreach (var n in grp.OrderByDescending(x => x.CreatedAt))
+                        {
+                            <div class="card" style="display:flex;gap:14px;padding:15px;cursor:pointer;border-color:@(n.IsRead ? "var(--black-border)" : "rgba(212,175,55,.22)");background:@(n.IsRead ? "var(--black-card)" : "rgba(212,175,55,.03)")"
+                                 @onclick="() => Notifs.MarkReadAsync(n.Id)">
+                                <div style="width:42px;height:42px;border-radius:50%;background:@IconBg(n.Type);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.9rem;flex-shrink:0">
+                                    <i class="@(n.IconClass ?? "fas fa-bell")"></i>
+                                </div>
+                                <div style="flex:1;min-width:0">
+                                    <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:3px">
+                                        <p style="font-weight:@(n.IsRead ? "500" : "700");color:var(--white);font-size:.88rem">@n.Title</p>
+                                        @if (!n.IsRead)
+                                        {
+                                            <div style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px"></div>
+                                        }
+                                    </div>
+                                    <p style="color:var(--silver-dim);font-size:.82rem;line-height:1.5;margin-bottom:4px">@n.Message</p>
+                                    <p style="color:var(--silver-dim);font-size:.72rem">@Rel(n.CreatedAt)</p>
+                                    @if (!string.IsNullOrEmpty(n.ActionUrl))
+                                    {
+                                        <a href="@n.ActionUrl" style="color:var(--gold);font-size:.78rem;text-decoration:none;font-weight:600" @onclick:stopPropagation>
+                                            View Details <i class="fas fa-arrow-right" style="font-size:.65rem"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        Notifs.Changed += StateHasChanged;
+        await Notifs.LoadAsync();
+    }
+
+    public void Dispose() => Notifs.Changed -= StateHasChanged;
+
+    static string DateLabel(DateTime d)
+    {
+        if (d == DateTime.Today) return "Today";
+        if (d == DateTime.Today.AddDays(-1)) return "Yesterday";
+        return d.ToString("MMMM dd, yyyy");
+    }
+
+    static string Rel(DateTime d)
+    {
+        var diff = DateTime.UtcNow - d;
+        if (diff.TotalMinutes < 1) return "just now";
+        if (diff.TotalHours < 1) return $"{(int)diff.TotalMinutes}m ago";
+        if (diff.TotalDays < 1) return $"{(int)diff.TotalHours}h ago";
+        return $"{(int)diff.TotalDays}d ago";
+    }
+
+    static string IconBg(NotificationType t) => t switch
+    {
+        NotificationType.OrderUpdate => "rgba(49,130,206,.15)",
+        NotificationType.Promotion => "rgba(212,175,55,.15)",
+        NotificationType.Welcome => "rgba(56,161,105,.15)",
+        _ => "rgba(212,175,55,.1)"
+    };
+}
