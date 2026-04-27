@@ -4,15 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0B0B0B" />
-    <meta name="description" content="TITAN — Unleash The Titan. Premium clothing brand." />
+    <meta name="description" content="TITAN — Premium clothing brand. Unleash The Titan." />
     <base href="/" />
 
-    <!-- Preload Fonts -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet" />
 
-    <!-- Font Awesome -->
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- TITAN CSS -->
@@ -20,7 +20,7 @@
 
     <!-- PWA -->
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/png" href="images/titan-icon.png" />
+    <link rel="icon" href="images/titan-icon.png" />
 
     <title>TITAN — Unleash The Titan</title>
 </head>
@@ -28,28 +28,38 @@
 
     <div id="app">
         <!-- Splash Screen -->
-        <div id="splash" style="
-        position: fixed; inset: 0; background: #0B0B0B;
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center; z-index: 9999;
-    ">
-            <div style="font-family: 'Bebas Neue', cursive; font-size: 6rem; color: #FFFFFF; letter-spacing: 8px; line-height: 1;">
-                TITAN
+        <div id="titan-splash" style="position:fixed;inset:0;background:#0B0B0B;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999">
+            <div style="font-family:'Bebas Neue',cursive;font-size:5rem;color:#fff;letter-spacing:10px;line-height:1;margin-bottom:8px">
+                TIT<span style="color:#D4AF37">A</span>N
             </div>
-            <div style="font-size: 0.75rem; letter-spacing: 8px; color: #D4AF37; text-transform: uppercase; margin-top: 8px; font-family: 'Inter', sans-serif;">
+            <div style="font-size:.72rem;letter-spacing:8px;color:#D4AF37;text-transform:uppercase;margin-bottom:56px">
                 Unleash The Titan
             </div>
-            <div style="margin-top: 48px; display: flex; gap: 8px;">
-                <span style="width: 8px; height: 8px; background: #D4AF37; border-radius: 50%; animation: pulse 1s ease-in-out infinite;"></span>
-                <span style="width: 8px; height: 8px; background: #D4AF37; border-radius: 50%; animation: pulse 1s ease-in-out 0.2s infinite;"></span>
-                <span style="width: 8px; height: 8px; background: #D4AF37; border-radius: 50%; animation: pulse 1s ease-in-out 0.4s infinite;"></span>
+            <div style="display:flex;gap:8px">
+                <span style="width:8px;height:8px;background:#D4AF37;border-radius:50%;animation:dot 1.2s ease-in-out infinite"></span>
+                <span style="width:8px;height:8px;background:#D4AF37;border-radius:50%;animation:dot 1.2s ease-in-out .2s infinite"></span>
+                <span style="width:8px;height:8px;background:#D4AF37;border-radius:50%;animation:dot 1.2s ease-in-out .4s infinite"></span>
             </div>
         </div>
     </div>
 
-    <div id="blazor-error-ui" style="display:none; position:fixed; bottom:0; width:100%; background:#E53E3E; color:white; padding:12px; text-align:center; z-index:9999;">
-        An error has occurred. <a href="">Reload</a>
+    <div id="blazor-error-ui" style="display:none;position:fixed;bottom:0;width:100%;background:#E53E3E;color:#fff;padding:12px 24px;text-align:center;z-index:9999">
+        A critical error has occurred. <a href="" style="color:#fff;font-weight:700">Reload</a>
     </div>
+
+    <style>
+        @keyframes dot {
+            0%,80%,100% {
+                opacity: .2;
+                transform: scale(.8)
+            }
+
+            40% {
+                opacity: 1;
+                transform: scale(1)
+            }
+        }
+    </style>
 
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="js/titan.js"></script>

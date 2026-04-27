@@ -1,0 +1,176 @@
+﻿@page "/admin/coupons"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@using Titan.Client.Services.Models
+@inject CouponService CouponSvc
+@inject ToastService  Toast
+@inject AuthService   Auth
+@inject NavigationManager Nav
+
+<PageTitle>Coupons — Admin TITAN</PageTitle>
+@if (!Auth.IsAdmin) { Nav.NavigateTo("/"); return; }
+
+<div class="main-content" style="padding-top:90px">
+  <div style="display:flex">
+    <AdminSidebar Active="coupons" />
+    <div style="flex:1;padding:36px;min-width:0">
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
+        <h1 style="font-size:2rem">Coupons</h1>
+        <button class="btn btn-gold" @onclick="()=>{_showModal=true;ResetForm();}"><i class="fas fa-plus"></i> Create Coupon</button>
+      </div>
+
+      @if (_loading)
+      { <div style="text-align:center;padding:60px"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--gold)"></i></div> }
+      else
+      {
+        <div class="card" style="padding:0;overflow:hidden">
+          <table class="t-admin">
+            <thead><tr><th>Code</th><th>Discount</th><th>Min Order</th><th>Usage</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              @foreach (var c in _coupons)
+              {
+                <tr>
+                  <td>
+                    <span style="color:var(--gold);font-weight:700;font-family:monospace;font-size:.95rem;letter-spacing:2px">@c.Code</span>
+                    <br/><span style="color:var(--silver-dim);font-size:.75rem">@c.Description</span>
+                  </td>
+                  <td style="color:var(--white);font-weight:600">
+                    @(c.DiscountType==DiscountType.Percentage?$"{c.DiscountValue}%":$"${c.DiscountValue:F2}")
+                  </td>
+                  <td style="color:var(--silver-dim)">@(c.MinimumOrderAmount.HasValue?$"${c.MinimumOrderAmount:F2}":"—")</td>
+                  <td><span style="color:var(--silver)">@c.UsageCount</span>@if(c.MaxUsageCount.HasValue){<span style="color:var(--silver-dim)"> / @c.MaxUsageCount</span>}</td>
+                  <td style="color:@(c.IsExpired?"var(--danger)":"var(--silver-dim)");font-size:.78rem">
+                    @(c.ExpiresAt.HasValue?c.ExpiresAt.Value.ToString("MMM dd, yyyy"):"No expiry")
+                  </td>
+                  <td>
+                    @if(c.IsExpired){<span class="badge badge-danger">Expired</span>}
+                    else if(c.IsActive){<span class="badge badge-success">Active</span>}
+                    else{<span class="badge badge-silver">Inactive</span>}
+                  </td>
+                  <td>
+                    <div style="display:flex;gap:7px">
+                      <button class="btn @(c.IsActive?"btn-outline-silver":"btn-outline-gold") btn-sm" @onclick="()=>Toggle(c)" title="@(c.IsActive?"Deactivate":"Activate")">
+                        <i class="fas @(c.IsActive?"fa-pause":"fa-play")"></i>
+                      </button>
+                      <button class="btn btn-danger btn-sm" @onclick="()=>_delId=c.Id"><i class="fas fa-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          @if (!_coupons.Any())
+          { <div style="text-align:center;padding:60px;color:var(--silver-dim)"><i class="fas fa-ticket-alt" style="font-size:2rem;opacity:.2;margin-bottom:12px;display:block"></i>No coupons yet</div> }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- CREATE MODAL -->
+@if (_showModal)
+{
+  <div class="modal-bg" @onclick="()=>_showModal=false">
+    <div class="card modal-box" style="max-width:520px" @onclick:stopPropagation>
+      <h3 style="margin-bottom:22px">Create Coupon</h3>
+
+      <div class="grid grid-2" style="gap:14px">
+        <div class="form-group"><label class="form-label">Code *</label><input class="form-control" @bind="_fCode" placeholder="TITAN20" style="text-transform:uppercase"/></div>
+        <div class="form-group"><label class="form-label">Type *</label>
+          <select class="form-control" @bind="_fType">
+            <option value="@DiscountType.Percentage">Percentage (%)</option>
+            <option value="@DiscountType.FixedAmount">Fixed Amount ($)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-2" style="gap:14px">
+        <div class="form-group"><label class="form-label">Value *</label><input type="number" class="form-control" @bind="_fValue" step="0.01"/></div>
+        <div class="form-group"><label class="form-label">Max Discount ($)</label><input type="number" class="form-control" @bind="_fMaxDisc" step="0.01" placeholder="Optional cap"/></div>
+      </div>
+      <div class="grid grid-2" style="gap:14px">
+        <div class="form-group"><label class="form-label">Min Order ($)</label><input type="number" class="form-control" @bind="_fMinOrder" step="0.01"/></div>
+        <div class="form-group"><label class="form-label">Max Uses</label><input type="number" class="form-control" @bind="_fMaxUses" placeholder="Unlimited"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Expires At</label><input type="datetime-local" class="form-control" @bind="_fExpires"/></div>
+      <div class="form-group"><label class="form-label">Description</label><input class="form-control" @bind="_fDesc" placeholder="20% off all orders"/></div>
+
+      @if (!string.IsNullOrEmpty(_mErr))
+      { <div style="background:rgba(229,62,62,.1);border:1px solid var(--danger);border-radius:var(--r);padding:11px 14px;margin-bottom:14px;color:#FC8181;font-size:.85rem">@_mErr</div> }
+
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-outline-silver" @onclick="()=>_showModal=false">Cancel</button>
+        <button class="btn btn-gold" @onclick="Create" disabled="@_saving">
+          @if(_saving){<i class="fas fa-spinner fa-spin"></i>}else{<i class="fas fa-ticket-alt"></i>} Create
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- DELETE CONFIRM -->
+@if (_delId.HasValue)
+{
+  <div class="modal-bg">
+    <div class="card modal-box" style="max-width:360px;text-align:center">
+      <i class="fas fa-exclamation-triangle" style="font-size:2.5rem;color:var(--danger);margin-bottom:14px;display:block"></i>
+      <h3 style="margin-bottom:8px">Delete Coupon?</h3>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
+        <button class="btn btn-outline-silver" @onclick="()=>_delId=null">Cancel</button>
+        <button class="btn btn-danger" @onclick="Delete"><i class="fas fa-trash"></i> Delete</button>
+      </div>
+    </div>
+  </div>
+}
+
+<style>
+  .t-admin{width:100%;border-collapse:collapse}
+  .t-admin th{padding:11px 15px;text-align:left;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--silver-dim);border-bottom:1px solid var(--black-border);font-weight:600}
+  .t-admin td{padding:14px 15px;border-bottom:1px solid rgba(34,34,34,.5);font-size:.88rem;color:var(--silver)}
+  .t-admin tr:hover td{background:rgba(255,255,255,.015)}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;align-items:center;justify-content:center;padding:24px}
+  .modal-box{width:100%;max-width:620px;max-height:90vh;overflow-y:auto}
+</style>
+
+@code {
+  List<CouponDto> _coupons=new(); bool _loading=true,_showModal,_saving;
+  Guid? _delId; string _mErr="";
+  string _fCode="",_fDesc=""; DiscountType _fType=DiscountType.Percentage;
+  decimal _fValue,_fMaxDisc,_fMinOrder; int? _fMaxUses; DateTime? _fExpires;
+
+  protected override async Task OnInitializedAsync(){if(!Auth.IsAdmin)return;await Load();}
+
+  async Task Load()
+  {
+    _loading=true;
+    var r=await CouponSvc.GetAllAsync();
+    _coupons=r?.Items??new();
+    _loading=false;
+  }
+
+  void ResetForm(){_fCode=_fDesc="";_fType=DiscountType.Percentage;_fValue=_fMaxDisc=_fMinOrder=0;_fMaxUses=null;_fExpires=null;_mErr="";}
+
+  async Task Create()
+  {
+    if(string.IsNullOrWhiteSpace(_fCode)||_fValue<=0){_mErr="Code and Value are required.";return;}
+    _saving=true;
+    var r=await CouponSvc.CreateAsync(new{
+      code=_fCode.ToUpper(),description=_fDesc,discountType=_fType,discountValue=_fValue,
+      minimumOrderAmount=_fMinOrder>0?(decimal?)_fMinOrder:null,
+      maximumDiscountAmount=_fMaxDisc>0?(decimal?)_fMaxDisc:null,
+      expiresAt=_fExpires?.ToUniversalTime(),maxUsageCount=_fMaxUses
+    });
+    if(r?.Success==true){Toast.Success("Coupon created!");_showModal=false;await Load();}
+    else _mErr=r?.Message??"Failed.";
+    _saving=false;
+  }
+
+  async Task Toggle(CouponDto c){await CouponSvc.ToggleAsync(c.Id);Toast.Info($"Coupon {c.Code} {(c.IsActive?"deactivated":"activated")}.");await Load();}
+
+  async Task Delete()
+  {
+    if(!_delId.HasValue)return;
+    await CouponSvc.DeleteAsync(_delId.Value);
+    Toast.Success("Coupon deleted.");_delId=null;await Load();
+  }
+}
