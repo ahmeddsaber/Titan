@@ -1,0 +1,166 @@
+﻿@page "/shop"
+@using Titan.Client.Services.AppServices
+@inject ProductService   Products
+@inject CategoryService  Categories
+@inject NavigationManager Nav
+
+<PageTitle>Shop — TITAN</PageTitle>
+
+<div class="main-content" style="padding-top:90px;padding-bottom:60px">
+  <div class="container">
+    <div style="margin-bottom:36px">
+      <h1 style="font-size:clamp(1.8rem,4vw,3rem);margin-bottom:6px">All Products</h1>
+      <p style="color:var(--silver-dim)">@_total products</p>
+    </div>
+
+    <div style="display:flex;gap:28px;align-items:flex-start">
+
+      <!-- SIDEBAR FILTER -->
+      <aside style="width:242px;flex-shrink:0;position:sticky;top:88px">
+        <div class="card">
+          <h4 style="font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:18px"><i class="fas fa-sliders-h"></i> Filters</h4>
+
+          <div class="form-group">
+            <label class="form-label">Search</label>
+            <input class="form-control" placeholder="Product name…" @bind="_f.Search" @bind:event="oninput" @onkeyup="() => Debounce()" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-control" @onchange="e => OnCatChange(e.Value?.ToString())">
+              <option value="">All Categories</option>
+              @foreach (var c in Categories.All)
+              { <option value="@c.Id" selected="@(_f.CategoryId == c.Id)">@c.Name (@c.ProductCount)</option> }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Price Range</label>
+            <div style="display:flex;gap:8px">
+              <input type="number" class="form-control" placeholder="Min" @bind="_f.MinPrice" style="width:50%" />
+              <input type="number" class="form-control" placeholder="Max" @bind="_f.MaxPrice" style="width:50%" />
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:.85rem">
+              <input type="checkbox" @bind="_onSale"    @bind:after="Load" style="accent-color:var(--gold)" /> On Sale
+            </label>
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:.85rem">
+              <input type="checkbox" @bind="_featured"  @bind:after="Load" style="accent-color:var(--gold)" /> Featured Only
+            </label>
+          </div>
+
+          <button class="btn btn-gold btn-block btn-sm"     @onclick="Load">Apply</button>
+          <button class="btn btn-outline-silver btn-block btn-sm" style="margin-top:8px" @onclick="Clear">Clear All</button>
+        </div>
+      </aside>
+
+      <!-- PRODUCT AREA -->
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+          <p style="color:var(--silver-dim);font-size:.85rem">Showing @_items.Count of @_total</p>
+          <select class="form-control" style="width:auto;padding:8px 14px;font-size:.85rem" @onchange="e => { _f.SortBy = e.Value?.ToString()??"newest"; _ = Load(); }">
+            <option value="newest">Newest</option>
+            <option value="popular">Most Popular</option>
+            <option value="rating">Top Rated</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+          </select>
+        </div>
+
+        @if (_loading)
+        { <SkeletonGrid Count="9" /> }
+        else if (!_items.Any())
+        {
+          <div style="text-align:center;padding:80px;color:var(--silver-dim)">
+            <i class="fas fa-search" style="font-size:2.5rem;opacity:.2;margin-bottom:16px;display:block"></i>
+            <h3 style="margin-bottom:8px">No products found</h3>
+            <p>Try adjusting your filters</p>
+          </div>
+        }
+        else
+        {
+          <div class="grid grid-3">
+            @foreach (var p in _items) { <ProductCard Product="p" /> }
+          </div>
+
+          @if (_totalPages > 1)
+          {
+            <div class="pagination" style="margin-top:44px">
+              <button class="page-btn" @onclick="() => GoPage(_page-1)" disabled="@(_page==1)"><i class="fas fa-chevron-left"></i></button>
+              @for (int i = Math.Max(1,_page-2); i <= Math.Min(_totalPages,_page+2); i++)
+              { var pg = i; <button class="page-btn @(_page==pg?"active":"")" @onclick="() => GoPage(pg)">@pg</button> }
+              <button class="page-btn" @onclick="() => GoPage(_page+1)" disabled="@(_page==_totalPages)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .pagination{display:flex;align-items:center;gap:7px;justify-content:center}
+  .page-btn{width:38px;height:38px;border-radius:var(--r);border:1px solid var(--black-border);background:var(--black-card);color:var(--silver);cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;font-size:.85rem}
+  .page-btn:hover,.page-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
+  .page-btn:disabled{opacity:.35;cursor:not-allowed}
+</style>
+
+@code {
+  [SupplyParameterFromQuery] public string? Search   { get; set; }
+  [SupplyParameterFromQuery] public string? Category { get; set; }
+  [SupplyParameterFromQuery] public string? SortBy   { get; set; }
+  [SupplyParameterFromQuery] public bool?   HasDiscount { get; set; }
+
+  ProductFilter _f = new() { PageSize = 12 };
+  List<ProductDto> _items = new();
+  bool _loading = true, _onSale, _featured;
+  int  _page = 1, _totalPages = 1, _total;
+  CancellationTokenSource? _cts;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await Categories.LoadAsync();
+    if (!string.IsNullOrEmpty(Search))   _f.Search  = Search;
+    if (!string.IsNullOrEmpty(SortBy))   _f.SortBy  = SortBy;
+    if (HasDiscount == true)             { _onSale = true; }
+    if (!string.IsNullOrEmpty(Category))
+    {
+      var c = Categories.All.FirstOrDefault(x => x.Slug == Category);
+      if (c is not null) _f.CategoryId = c.Id;
+    }
+    await Load();
+  }
+
+  async Task Load()
+  {
+    _loading = true;
+    _f.Page         = _page;
+    _f.HasDiscount  = _onSale   ? true : null;
+    _f.IsFeatured   = _featured ? true : null;
+    var r = await Products.GetAllAsync(_f);
+    _items      = r?.Items ?? new();
+    _total      = r?.TotalCount ?? 0;
+    _totalPages = r?.TotalPages ?? 1;
+    _loading    = false;
+  }
+
+  async Task GoPage(int p) { _page = p; await Load(); }
+
+  void OnCatChange(string? v)
+  {
+    _f.CategoryId = string.IsNullOrEmpty(v) ? null : Guid.Parse(v);
+    _ = Load();
+  }
+
+  void Debounce()
+  {
+    _cts?.Cancel();
+    _cts = new CancellationTokenSource();
+    var token = _cts.Token;
+    _ = Task.Delay(400, token).ContinueWith(_ => InvokeAsync(Load), token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
+  }
+
+  void Clear() { _f = new ProductFilter { PageSize = 12 }; _onSale = _featured = false; _page = 1; _ = Load(); }
+}

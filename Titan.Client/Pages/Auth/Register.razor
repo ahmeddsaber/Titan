@@ -1,0 +1,111 @@
+﻿@page "/register"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@inject AuthService Auth
+@inject ToastService Toast
+@inject NavigationManager Nav
+
+<PageTitle>Join TITAN</PageTitle>
+
+<div class="auth-wrap">
+    <div style="text-align:center;margin-bottom:36px">
+        <a href="/" class="brand-font" style="font-size:2.6rem;color:var(--white);text-decoration:none;letter-spacing:8px">TIT<span style="color:var(--gold)">A</span>N</a>
+        <p style="color:var(--silver-dim);margin-top:6px;letter-spacing:4px;font-size:.72rem;text-transform:uppercase">Unleash The Titan</p>
+    </div>
+
+    <div class="card" style="max-width:460px;width:100%;margin:0 auto;padding:36px">
+        <h2 style="margin-bottom:26px;font-size:1.5rem">Create Account</h2>
+
+        @if (!string.IsNullOrEmpty(_err))
+        {
+            <div class="alert-err"><i class="fas fa-exclamation-circle"></i> @_err</div>
+        }
+
+        <div class="grid grid-2" style="gap:14px">
+            <div class="form-group" style="margin:0">
+                <label class="form-label">First Name *</label>
+                <input class="form-control" placeholder="John" @bind="_fn" />
+            </div>
+            <div class="form-group" style="margin:0">
+                <label class="form-label">Last Name *</label>
+                <input class="form-control" placeholder="Titan" @bind="_ln" />
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:14px">
+            <label class="form-label">Email *</label>
+            <input type="email" class="form-control" placeholder="you@titan.com" @bind="_email" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="form-control" placeholder="+1 234 567 890" @bind="_phone" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Password *</label>
+            <input type="password" class="form-control" placeholder="Min 8 characters" @bind="_pwd" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Confirm Password *</label>
+            <input type="password" class="form-control" placeholder="Repeat password" @bind="_confirm" />
+        </div>
+
+        <button class="btn btn-gold btn-block btn-lg" @onclick="Register" disabled="@_busy">
+            @if (_busy)
+            {
+                <i class="fas fa-spinner fa-spin"></i>
+            }
+            else
+            {
+
+                <i class="fas fa-user-plus"></i>
+            }
+ Create Account
+        </button>
+
+        <hr class="divider" style="margin:22px 0" />
+        <p style="text-align:center;font-size:.85rem;color:var(--silver-dim)">
+            Already a Titan? <a href="/login" style="color:var(--gold);text-decoration:none;font-weight:700">Sign In</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    .auth-wrap {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 24px 40px;
+        background: var(--black)
+    }
+
+    .alert-err {
+        background: rgba(229,62,62,.1);
+        border: 1px solid var(--danger);
+        border-radius: var(--r);
+        padding: 11px 14px;
+        margin-bottom: 18px;
+        color: #FC8181;
+        font-size: .85rem
+    }
+</style>
+
+@code {
+    string _fn = "", _ln = "", _email = "", _phone = "", _pwd = "", _confirm = "", _err = "";
+    bool _busy;
+
+    protected override void OnInitialized() { if (Auth.IsAuthenticated) Nav.NavigateTo("/"); }
+
+    async Task Register()
+    {
+        _err = "";
+        if (string.IsNullOrWhiteSpace(_fn) || string.IsNullOrWhiteSpace(_email) || string.IsNullOrWhiteSpace(_pwd)) { _err = "Fill all required fields."; return; }
+        if (_pwd != _confirm) { _err = "Passwords don't match."; return; }
+        if (_pwd.Length < 8) { _err = "Password must be at least 8 characters."; return; }
+        _busy = true;
+        var r = await Auth.RegisterAsync(_fn, _ln, _email, _phone, _pwd);
+        if (r?.Success == true) { Toast.Success("Welcome to TITAN! 🔱"); Nav.NavigateTo("/"); }
+        else _err = r?.Message ?? "Registration failed.";
+        _busy = false;
+    }
+}

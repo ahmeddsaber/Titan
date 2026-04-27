@@ -1,0 +1,103 @@
+﻿@page "/login"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@inject AuthService Auth
+@inject ToastService Toast
+@inject NavigationManager Nav
+
+<PageTitle>Login — TITAN</PageTitle>
+
+<div class="auth-wrap">
+    <div style="text-align:center;margin-bottom:40px">
+        <a href="/" class="brand-font" style="font-size:2.6rem;color:var(--white);text-decoration:none;letter-spacing:8px">TIT<span style="color:var(--gold)">A</span>N</a>
+        <p style="color:var(--silver-dim);margin-top:6px;font-size:.85rem">Welcome back, Titan.</p>
+    </div>
+
+    <div class="card" style="max-width:420px;width:100%;margin:0 auto;padding:36px">
+        <h2 style="margin-bottom:6px;font-size:1.5rem">Sign In</h2>
+        <p style="color:var(--silver-dim);font-size:.82rem;margin-bottom:28px">Enter your credentials to continue</p>
+
+        @if (!string.IsNullOrEmpty(_err))
+        {
+            <div class="alert-err"><i class="fas fa-exclamation-circle"></i> @_err</div>
+        }
+
+        <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" placeholder="you@titan.com" @bind="_email" @onkeyup="Key" />
+        </div>
+        <div class="form-group">
+            <label class="form-label" style="display:flex;justify-content:space-between">
+                <span>Password</span>
+                <a href="/forgot-password" style="color:var(--gold);font-size:.78rem;text-decoration:none">Forgot?</a>
+            </label>
+            <div style="position:relative">
+                <input type="@(_show ? "text" : "password")" class="form-control" placeholder="••••••••" @bind="_pwd" @onkeyup="Key" />
+                <button type="button" @onclick="() => _show = !_show"
+                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--silver-dim);cursor:pointer">
+                    <i class="fas @(_show ? "fa-eye-slash" : "fa-eye")"></i>
+                </button>
+            </div>
+        </div>
+
+        <button class="btn btn-gold btn-block btn-lg" @onclick="Login" disabled="@_busy" style="margin-top:6px">
+            @if (_busy)
+            {
+                <i class="fas fa-spinner fa-spin"></i>
+            }
+            else
+            {
+
+                <i class="fas fa-sign-in-alt"></i>
+            }
+ Sign In
+        </button>
+
+        <hr class="divider" style="margin:24px 0" />
+        <p style="text-align:center;font-size:.85rem;color:var(--silver-dim)">
+            Don't have an account? <a href="/register" style="color:var(--gold);text-decoration:none;font-weight:700">Join TITAN</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    .auth-wrap {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 24px 40px;
+        background: var(--black)
+    }
+
+    .alert-err {
+        background: rgba(229,62,62,.1);
+        border: 1px solid var(--danger);
+        border-radius: var(--r);
+        padding: 11px 14px;
+        margin-bottom: 18px;
+        color: #FC8181;
+        font-size: .85rem
+    }
+</style>
+
+@code {
+    string _email = "", _pwd = "", _err = "";
+    bool _busy, _show;
+
+    protected override void OnInitialized() { if (Auth.IsAuthenticated) Nav.NavigateTo("/"); }
+
+    void Key(KeyboardEventArgs e) { if (e.Key == "Enter") _ = Login(); }
+
+    async Task Login()
+    {
+        _err = "";
+        if (string.IsNullOrWhiteSpace(_email) || string.IsNullOrWhiteSpace(_pwd)) { _err = "Please fill in all fields."; return; }
+        _busy = true;
+        var r = await Auth.LoginAsync(_email, _pwd);
+        if (r?.Success == true) { Toast.Success("Welcome back! 🔱"); Nav.NavigateTo("/"); }
+        else _err = r?.Message ?? "Login failed.";
+        _busy = false;
+    }
+}

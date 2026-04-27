@@ -1,0 +1,299 @@
+﻿@page "/product/{Slug}"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@inject ProductService  Products
+@inject CartService     Cart
+@inject WishlistService Wishlist
+@inject ReviewService   Reviews
+@inject AuthService     Auth
+@inject ToastService    Toast
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<PageTitle>@(_product?.Name ?? "Product") — TITAN</PageTitle>
+
+<div class="main-content" style="padding-top:92px;padding-bottom:60px">
+  <div class="container">
+
+  @if (_loading)
+  {
+    <div class="grid grid-2" style="gap:48px">
+      <div class="skel" style="aspect-ratio:3/4;border-radius:var(--r-lg)"></div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        @for(int i=0;i<7;i++){<div class="skel" style="height:24px;width:@(80-i*8)%;border-radius:4px"></div>}
+      </div>
+    </div>
+    <style>.skel{background:linear-gradient(90deg,var(--black-card) 25%,var(--black-border) 50%,var(--black-card) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}</style>
+  }
+  else if (_product is null)
+  {
+    <div style="text-align:center;padding:80px">
+      <h2 style="margin-bottom:16px">Product not found</h2>
+      <a href="/shop" class="btn btn-gold">Back to Shop</a>
+    </div>
+  }
+  else
+  {
+    <!-- BREADCRUMB -->
+    <div style="display:flex;gap:7px;align-items:center;font-size:.78rem;color:var(--silver-dim);margin-bottom:22px">
+      <a href="/" style="color:var(--silver-dim);text-decoration:none">Home</a> <i class="fas fa-chevron-right" style="font-size:.6rem"></i>
+      <a href="/shop" style="color:var(--silver-dim);text-decoration:none">Shop</a> <i class="fas fa-chevron-right" style="font-size:.6rem"></i>
+      <a href="/shop?category=@_product.Category?.Slug" style="color:var(--silver-dim);text-decoration:none">@_product.Category?.Name</a>
+      <i class="fas fa-chevron-right" style="font-size:.6rem"></i>
+      <span style="color:var(--silver)">@_product.Name</span>
+    </div>
+
+    <div class="grid grid-2" style="gap:56px;align-items:start">
+
+      <!-- IMAGES -->
+      <div>
+        <div style="border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--black-border);aspect-ratio:3/4;cursor:zoom-in"
+             @onclick="() => JS.InvokeVoidAsync(`TitanJS.openLightbox`,_img)">
+          <img src="@_img" alt="@_product.Name" style="width:100%;height:100%;object-fit:cover" />
+        </div>
+        @if (_product.Images.Count > 1)
+        {
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            @foreach (var img in _product.Images)
+            {
+              <div style="width:68px;height:86px;border-radius:6px;overflow:hidden;cursor:pointer;border:2px solid @(_img==img.Url?"var(--gold)":"var(--black-border)");transition:all .2s"
+                   @onclick="() => _img = img.Url">
+                <img src="@img.Url" style="width:100%;height:100%;object-fit:cover" />
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- DETAILS -->
+      <div>
+        <h1 style="font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:10px">@_product.Name</h1>
+
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+          <div style="display:flex;gap:2px">
+            @for(int i=1;i<=5;i++){<i class="@(i<=Math.Round(_product.AverageRating)?"fas":"far") fa-star" style="color:var(--gold);font-size:.85rem"></i>}
+          </div>
+          <span style="color:var(--silver-dim);font-size:.82rem">@_product.AverageRating.ToString("F1") (@_product.ReviewCount reviews)</span>
+          <span style="color:var(--silver-dim)">·</span>
+          <span style="color:var(--silver-dim);font-size:.82rem">@_product.SoldCount sold</span>
+        </div>
+
+        <!-- PRICE -->
+        <div style="margin-bottom:22px">
+          <span style="font-size:2rem;font-weight:700;color:var(--gold);font-family:'Montserrat',sans-serif">$@_product.CurrentPrice.ToString("F2")</span>
+          @if (_product.HasDiscount)
+          {
+            <span style="color:var(--silver-dim);text-decoration:line-through;font-size:1.1rem;margin-left:10px">$@_product.Price.ToString("F2")</span>
+            <span class="badge badge-gold" style="margin-left:8px">-@((int)_product.DiscountPercentage)%</span>
+          }
+        </div>
+
+        <hr class="divider" />
+
+        <!-- VARIANTS -->
+        @if (_product.Variants.Any(v => !string.IsNullOrEmpty(v.Size)))
+        {
+          <div style="margin-bottom:18px">
+            <label style="font-size:.82rem;color:var(--silver-dim);margin-bottom:9px;display:block">
+              SIZE: <strong style="color:var(--white)">@_selSize</strong>
+            </label>
+            <div style="display:flex;gap:7px;flex-wrap:wrap">
+              @foreach (var s in _product.Variants.Select(v => v.Size).Distinct())
+              {
+                <button class="size-btn @(_selSize==s?"active":"")" @onclick="() => _selSize = s">@s</button>
+              }
+            </div>
+          </div>
+        }
+
+        @if (_product.Variants.Any(v => !string.IsNullOrEmpty(v.Color)))
+        {
+          <div style="margin-bottom:18px">
+            <label style="font-size:.82rem;color:var(--silver-dim);margin-bottom:9px;display:block">
+              COLOR: <strong style="color:var(--white)">@_selColor</strong>
+            </label>
+            <div style="display:flex;gap:9px;flex-wrap:wrap">
+              @foreach (var v in _product.Variants.Where(x => string.IsNullOrEmpty(_selSize) || x.Size == _selSize))
+              {
+                <button title="@v.Color" @onclick="() => { _selColor = v.Color; _selVariant = v; }"
+                        style="width:30px;height:30px;border-radius:50%;background:@(string.IsNullOrEmpty(v.ColorHex)?"#888":v.ColorHex);border:2px solid @(_selColor==v.Color?"var(--gold)":"transparent");cursor:pointer;transition:all .2s"></button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- QTY -->
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+          <label style="font-size:.82rem;color:var(--silver-dim)">QTY:</label>
+          <div style="display:flex;align-items:center;gap:0;border:1px solid var(--black-border);border-radius:var(--r);overflow:hidden">
+            <button @onclick="() => { if(_qty>1) _qty--; }" style="width:36px;height:36px;background:var(--black);border:none;color:var(--silver);cursor:pointer;font-size:1rem">−</button>
+            <span style="padding:0 16px;color:var(--white);font-weight:600;min-width:42px;text-align:center">@_qty</span>
+            <button @onclick="() => { if(_qty<_product.StockQuantity) _qty++; }" style="width:36px;height:36px;background:var(--black);border:none;color:var(--silver);cursor:pointer;font-size:1rem">+</button>
+          </div>
+          <span style="font-size:.8rem;color:@(_product.StockQuantity==0?"var(--danger)":_product.StockQuantity<=5?"var(--warning)":"var(--success)")">
+            @(_product.StockQuantity == 0 ? "Out of Stock" : $"{_product.StockQuantity} in stock")
+          </span>
+        </div>
+
+        <!-- ACTIONS -->
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+          <button class="btn btn-gold btn-lg" style="flex:1" @onclick="AddToCart"
+                  disabled="@(_product.StockQuantity==0||_adding)">
+            @if(_adding){<i class="fas fa-spinner fa-spin"></i>}else{<i class="fas fa-shopping-bag"></i>}
+            Add to Cart
+          </button>
+          <button class="btn btn-outline-gold btn-lg" @onclick="ToggleWishlist">
+            <i class="@(Wishlist.Has(_product.Id)?"fas":"far") fa-heart"></i>
+          </button>
+        </div>
+
+        <!-- SHARE -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
+          <span style="font-size:.72rem;color:var(--silver-dim);letter-spacing:2px;text-transform:uppercase">Share:</span>
+          @foreach (var (icon, fn) in _shareButtons)
+          {
+            <button class="share-btn" @onclick="fn"><i class="@icon"></i></button>
+          }
+        </div>
+
+        <hr class="divider" />
+        <h4 style="font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Description</h4>
+        <p style="color:var(--silver);line-height:1.8;font-size:.9rem">@_product.Description</p>
+        <p style="margin-top:12px;font-size:.75rem;color:var(--silver-dim)">SKU: @_product.SKU</p>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div style="margin-top:72px">
+      <h2 style="margin-bottom:28px">Customer Reviews</h2>
+
+      @if (Auth.IsAuthenticated && !_userReviewed)
+      {
+        <div class="card" style="max-width:580px;margin-bottom:36px">
+          <h4 style="margin-bottom:18px">Write a Review</h4>
+          <div style="display:flex;gap:6px;margin-bottom:14px">
+            @for(int i=1;i<=5;i++){var s=i;<i class="@(_newRating>=s?"fas":"far") fa-star" style="font-size:1.4rem;color:var(--gold);cursor:pointer" @onclick="() => _newRating=s"></i>}
+          </div>
+          <textarea class="form-control" rows="4" placeholder="Share your experience…" @bind="_newComment" style="margin-bottom:12px"></textarea>
+          <button class="btn btn-gold" @onclick="SubmitReview" disabled="@_submitting">
+            @if(_submitting){<i class="fas fa-spinner fa-spin"></i>} Submit Review
+          </button>
+        </div>
+      }
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        @foreach (var r in _reviews)
+        {
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:38px;height:38px;border-radius:50%;background:rgba(212,175,55,.1);display:flex;align-items:center;justify-content:center;color:var(--gold)"><i class="fas fa-user"></i></div>
+                <div>
+                  <p style="font-weight:600;color:var(--white);margin-bottom:2px">@r.UserName</p>
+                  @if(r.IsVerifiedPurchase){<span class="badge badge-success" style="font-size:.68rem"><i class="fas fa-check"></i> Verified</span>}
+                </div>
+              </div>
+              <span style="font-size:.78rem;color:var(--silver-dim)">@r.CreatedAt.ToString("MMM dd, yyyy")</span>
+            </div>
+            <div style="display:flex;gap:2px;margin-bottom:8px">
+              @for(int i=1;i<=5;i++){<i class="@(i<=r.Rating?"fas":"far") fa-star" style="color:var(--gold);font-size:.8rem"></i>}
+            </div>
+            <p style="color:var(--silver);line-height:1.7;font-size:.88rem">@r.Comment</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- RELATED -->
+    @if (_related.Any())
+    {
+      <div style="margin-top:72px">
+        <h2 style="margin-bottom:28px">You May Also Like</h2>
+        <div class="grid grid-4">
+          @foreach (var p in _related) { <ProductCard Product="p" /> }
+        </div>
+      </div>
+    }
+  }
+  </div>
+</div>
+
+<style>
+  .size-btn{padding:7px 15px;border:1px solid var(--black-border);border-radius:5px;background:var(--black);color:var(--silver);cursor:pointer;transition:all .2s;font-size:.82rem;font-weight:500}
+  .size-btn:hover,.size-btn.active{border-color:var(--gold);color:var(--gold)}
+  .share-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--black-border);background:transparent;color:var(--silver);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+  .share-btn:hover{border-color:var(--gold);color:var(--gold)}
+</style>
+
+@code {
+  [Parameter] public string Slug { get; set; } = "";
+
+  ProductDto?        _product;
+  List<ReviewDto>    _reviews = new();
+  List<ProductDto>   _related = new();
+  bool _loading = true, _adding, _submitting, _userReviewed;
+  string _img = "", _selSize = "", _selColor = "";
+  ProductVariantDto? _selVariant;
+  int    _qty = 1, _newRating = 5;
+  string _newComment = "";
+
+  (string icon, Func<Task> fn)[] ShareButtons => new[]
+  {
+    ("fab fa-whatsapp",       async () => await JS.InvokeVoidAsync("TitanJS.shareWhatsApp", _product!.Name, $"${_product.CurrentPrice:F2}", Nav.Uri)),
+    ("fab fa-facebook-f",     async () => await JS.InvokeVoidAsync("TitanJS.shareFacebook", Nav.Uri)),
+    ("fab fa-telegram-plane", async () => await JS.InvokeVoidAsync("TitanJS.shareTelegram", _product!.Name, Nav.Uri)),
+    ("fas fa-link",           async () => await JS.InvokeVoidAsync("TitanJS.copyToClipboard", Nav.Uri)),
+  };
+
+  (string icon, Func<Task> fn)[] _shareButtons = Array.Empty<(string, Func<Task>)>();
+
+  protected override async Task OnParametersSetAsync()
+  {
+    _loading   = true;
+    _product   = await Products.GetBySlugAsync(Slug);
+    if (_product is not null)
+    {
+      _img         = _product.MainImageUrl;
+      _selVariant  = _product.Variants.FirstOrDefault();
+      _selSize     = _selVariant?.Size  ?? "";
+      _selColor    = _selVariant?.Color ?? "";
+      _shareButtons = ShareButtons;
+
+      var rev = await Reviews.GetProductReviewsAsync(_product.Id);
+      _reviews     = rev?.Items ?? new();
+      _userReviewed = Auth.IsAuthenticated && _reviews.Any(r => r.UserId == Auth.User?.Id);
+      _related     = await Products.GetRelatedAsync(_product.Id) ?? new();
+
+      if (Auth.IsAuthenticated) await Products.RecordViewAsync(_product.Id);
+    }
+    _loading = false;
+  }
+
+  async Task AddToCart()
+  {
+    if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+    _adding = true;
+    var r = await Cart.AddAsync(_product!.Id, _qty, _selVariant?.Id);
+    if (r?.Success == true) Toast.Success("Added to cart!");
+    else Toast.Error(r?.Message ?? "Failed.");
+    _adding = false;
+  }
+
+  async Task ToggleWishlist()
+  {
+    if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+    await Wishlist.ToggleAsync(_product!.Id);
+    StateHasChanged();
+  }
+
+  async Task SubmitReview()
+  {
+    if (_newRating < 1 || string.IsNullOrWhiteSpace(_newComment)) return;
+    _submitting = true;
+    var r = await Reviews.CreateAsync(_product!.Id, _newRating, _newComment);
+    if (r?.Success == true && r.Data is not null)
+    { Toast.Success("Review submitted!"); _reviews.Insert(0, r.Data); _userReviewed = true; _newComment = ""; }
+    else Toast.Error(r?.Message ?? "Failed.");
+    _submitting = false;
+  }
+}
