@@ -1,0 +1,158 @@
+﻿@page "/admin"
+@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.AppServices
+@using Titan.Client.Services.Models
+@inject UserService  UserSvc
+@inject AuthService  Auth
+@inject NavigationManager Nav
+
+<PageTitle>Dashboard — Admin TITAN</PageTitle>
+
+@if (!Auth.IsAdmin) { Nav.NavigateTo("/"); return; }
+
+<div class="main-content" style="padding-top:90px">
+  <div style="display:flex">
+    <AdminSidebar Active="dashboard" />
+    <div style="flex:1;padding:36px;min-width:0">
+
+      <div style="margin-bottom:28px">
+        <h1 style="font-size:2rem;margin-bottom:4px">Dashboard</h1>
+        <p style="color:var(--silver-dim)">Welcome back, @Auth.User?.FirstName. Here's what's happening.</p>
+      </div>
+
+      @if (_stats is null)
+      {
+        <div class="grid grid-4" style="margin-bottom:28px">
+          @for(int i=0;i<4;i++){<div class="skel" style="height:110px;border-radius:var(--r-lg)"></div>}
+        </div>
+        <style>.skel{background:linear-gradient(90deg,var(--black-card) 25%,var(--black-border) 50%,var(--black-card) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}</style>
+      }
+      else
+      {
+        <!-- STAT CARDS -->
+        <div class="grid grid-4" style="margin-bottom:28px">
+          @foreach (var (icon,lbl,val,bg,col) in StatCards)
+          {
+            <div class="stat-card">
+              <div style="width:52px;height:52px;border-radius:var(--r);background:@bg;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:@col;flex-shrink:0">
+                <i class="@icon"></i>
+              </div>
+              <div>
+                <div style="font-size:1.7rem;font-weight:700;color:var(--white);font-family:'Montserrat',sans-serif">@val</div>
+                <div style="font-size:.72rem;color:var(--silver-dim);text-transform:uppercase;letter-spacing:1.5px">@lbl</div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- ALERTS -->
+        <div class="grid grid-2" style="gap:18px;margin-bottom:28px">
+          <div style="background:rgba(229,62,62,.07);border:1px solid rgba(229,62,62,.2);border-radius:var(--r-lg);padding:18px;display:flex;align-items:center;gap:14px">
+            <i class="fas fa-exclamation-triangle" style="font-size:1.4rem;color:var(--danger)"></i>
+            <div>
+              <p style="font-weight:600;color:var(--white)">@_stats.PendingOrders Pending Orders</p>
+              <a href="/admin/orders" style="color:var(--danger);font-size:.82rem;text-decoration:none">Manage orders →</a>
+            </div>
+          </div>
+          <div style="background:rgba(214,158,46,.07);border:1px solid rgba(214,158,46,.2);border-radius:var(--r-lg);padding:18px;display:flex;align-items:center;gap:14px">
+            <i class="fas fa-boxes" style="font-size:1.4rem;color:var(--warning)"></i>
+            <div>
+              <p style="font-weight:600;color:var(--white)">@_stats.LowStockProducts Low Stock</p>
+              <a href="/admin/products" style="color:var(--warning);font-size:.82rem;text-decoration:none">Manage inventory →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- REVENUE CHART -->
+        <div class="card" style="margin-bottom:24px">
+          <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:18px"><i class="fas fa-chart-bar"></i> Revenue — Last 7 Days</h3>
+          @if (_stats.RevenueChart.Any())
+          {
+            var maxRev = _stats.RevenueChart.Max(r => r.Revenue);
+            <div style="display:flex;align-items:flex-end;gap:10px;height:150px;padding:0 8px">
+              @foreach (var d in _stats.RevenueChart)
+              {
+                var h = maxRev > 0 ? (int)(d.Revenue / maxRev * 130) : 4;
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">
+                  <span style="font-size:.7rem;color:var(--gold)">$@((d.Revenue/1000).ToString("F1"))k</span>
+                  <div style="width:100%;height:@(h)px;background:linear-gradient(to top,var(--gold-dark),var(--gold));border-radius:4px 4px 0 0;transition:height .3s"></div>
+                  <span style="font-size:.68rem;color:var(--silver-dim)">@d.Label</span>
+                </div>
+              }
+            </div>
+          }
+          else
+          { <p style="color:var(--silver-dim);text-align:center;padding:40px">No data yet</p> }
+        </div>
+
+        <div class="grid grid-2" style="gap:22px">
+          <!-- TOP PRODUCTS -->
+          <div class="card">
+            <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px">Top Products</h3>
+            @foreach (var p in _stats.TopProducts)
+            {
+              <div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--black-border)">
+                <img src="@p.ImageUrl" style="width:38px;height:48px;object-fit:cover;border-radius:4px" />
+                <div style="flex:1;min-width:0">
+                  <p style="color:var(--white);font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@p.Name</p>
+                  <p style="color:var(--silver-dim);font-size:.75rem">@p.SoldCount sold</p>
+                </div>
+                <span style="color:var(--gold);font-weight:700;font-size:.88rem;flex-shrink:0">$@p.Revenue.ToString("N0")</span>
+              </div>
+            }
+          </div>
+
+          <!-- RECENT ORDERS -->
+          <div class="card">
+            <h3 style="font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px">Recent Orders</h3>
+            @foreach (var o in _stats.RecentOrders)
+            {
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--black-border);font-size:.85rem">
+                <div>
+                  <p style="color:var(--white);font-weight:600">@o.OrderNumber</p>
+                  <p style="color:var(--silver-dim);font-size:.75rem">@o.CustomerName</p>
+                </div>
+                <div style="text-align:right">
+                  <p style="color:var(--gold);font-weight:700">$@o.TotalAmount.ToString("F2")</p>
+                  <span class="badge @StatusBadge(o.Status)" style="font-size:.68rem">@o.Status</span>
+                </div>
+              </div>
+            }
+            <a href="/admin/orders" style="display:block;text-align:center;margin-top:14px;color:var(--gold);text-decoration:none;font-size:.82rem">View all orders →</a>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .stat-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--r-lg);padding:22px;display:flex;align-items:center;gap:18px;transition:var(--tr)}
+  .stat-card:hover{border-color:var(--gold-dark);transform:translateY(-2px)}
+</style>
+
+@code {
+  DashboardStats? _stats;
+
+  (string icon,string lbl,string val,string bg,string col)[] StatCards => _stats is null ? [] :
+  [
+    ("fas fa-users","Total Users",_stats.TotalUsers.ToString("N0"),"rgba(212,175,55,.1)","var(--gold)"),
+    ("fas fa-tshirt","Products",_stats.TotalProducts.ToString("N0"),"rgba(49,130,206,.1)","#63B3ED"),
+    ("fas fa-shopping-cart","Orders",_stats.TotalOrders.ToString("N0"),"rgba(56,161,105,.1)","#68D391"),
+    ("fas fa-dollar-sign","Revenue","$"+_stats.TotalRevenue.ToString("N0"),"rgba(214,158,46,.1)","#F6AD55"),
+  ];
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (!Auth.IsAdmin) return;
+    _stats = await UserSvc.GetStatsAsync();
+  }
+
+  static string StatusBadge(OrderStatus s) => s switch
+  {
+    OrderStatus.Delivered => "badge-success",
+    OrderStatus.Cancelled or OrderStatus.Failed => "badge-danger",
+    OrderStatus.Shipped or OrderStatus.OutForDelivery => "badge-info",
+    _ => "badge-warning"
+  };
+}
