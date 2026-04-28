@@ -1,0 +1,23 @@
+{
+  "name": "TITAN — Unleash The Titan",
+  "short_name": "TITAN",
+  "description": "Premium TITAN clothing brand e-commerce",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0B0B",
+  "theme_color": "#D4AF37",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/titan-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/titan-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": [ "shopping", "lifestyle" ]
+}
