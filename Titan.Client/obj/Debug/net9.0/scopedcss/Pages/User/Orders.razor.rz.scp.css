@@ -1,0 +1,20 @@
+.page-btn[b-n584nl21g2] {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--r);
+    border: 1px solid var(--black-border);
+    background: var(--black-card);
+    color: var(--silver);
+    cursor: pointer;
+    transition: var(--tr);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .85rem
+}
+
+.page-btn:hover[b-n584nl21g2], .page-btn.active[b-n584nl21g2] {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(212,175,55,.08)
+}

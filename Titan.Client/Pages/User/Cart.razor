@@ -1,8 +1,8 @@
-﻿@page "/cart"
+@page "/cart"
 @using Titan.Client.Services.Apibase
 @using Titan.Client.Services.AppServices
 @using Titan.Client.Services.Models
-@inject CartService Cart
+@inject CartService CartSvc
 @inject AuthService Auth
 @inject ToastService Toast
 @inject NavigationManager Nav
@@ -17,7 +17,7 @@
         {
             <div style="text-align:center;padding:60px"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--gold)"></i></div>
         }
-        else if (!Cart.Current?.Items.Any() ?? true)
+        else if (!CartSvc.Current?.Items.Any() ?? true)
         {
             <div class="card" style="text-align:center;padding:80px">
                 <i class="fas fa-shopping-bag" style="font-size:3.5rem;color:var(--gold);opacity:.25;margin-bottom:22px;display:block"></i>
@@ -32,7 +32,7 @@
 
                 <!-- ITEMS -->
                 <div style="display:flex;flex-direction:column;gap:14px">
-                    @foreach (var item in Cart.Current!.Items)
+                    @foreach (var item in CartSvc.Current!.Items)
                     {
                         <div class="card" style="display:flex;gap:16px;padding:18px">
                             <a href="/product/@item.ProductSlug">
@@ -98,32 +98,32 @@
 
                     <div style="display:flex;flex-direction:column;gap:9px;font-size:.86rem;margin-bottom:18px">
                         <div style="display:flex;justify-content:space-between;color:var(--silver-dim)">
-                            <span>Subtotal (@Cart.Current!.TotalItems items)</span>
-                            <span>$@Cart.Current.SubTotal.ToString("F2")</span>
+                            <span>Subtotal (@CartSvc.Current!.TotalItems items)</span>
+                            <span>$@CartSvc.Current.SubTotal.ToString("F2")</span>
                         </div>
-                        @if (Cart.Current.DiscountAmount > 0)
+                        @if (CartSvc.Current.DiscountAmount > 0)
                         {
                             <div style="display:flex;justify-content:space-between;color:var(--success)">
-                                <span>Discount (@Cart.Current.AppliedCouponCode)</span>
-                                <span>-$@Cart.Current.DiscountAmount.ToString("F2")</span>
+                                <span>Discount (@CartSvc.Current.AppliedCouponCode)</span>
+                                <span>-$@CartSvc.Current.DiscountAmount.ToString("F2")</span>
                             </div>
                         }
                         <div style="display:flex;justify-content:space-between;color:var(--silver-dim)">
                             <span>Shipping</span>
-                            <span>@(Cart.Current.ShippingCost == 0 ? "🎉 FREE" : "$" + Cart.Current.ShippingCost.ToString("F2"))</span>
+                            <span>@(CartSvc.Current.ShippingCost == 0 ? "🎉 FREE" : "$" + CartSvc.Current.ShippingCost.ToString("F2"))</span>
                         </div>
                         <hr class="divider" style="margin:4px 0" />
                         <div style="display:flex;justify-content:space-between;font-size:1.08rem;font-weight:700;color:var(--white)">
                             <span>Total</span>
-                            <span style="color:var(--gold)">$@Cart.Current.TotalAmount.ToString("F2")</span>
+                            <span style="color:var(--gold)">$@CartSvc.Current.TotalAmount.ToString("F2")</span>
                         </div>
                     </div>
 
-                    @if (Cart.Current.ShippingCost > 0)
+                    @if (CartSvc.Current.ShippingCost > 0)
                     {
                         <div style="padding:10px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.15);border-radius:6px;font-size:.78rem;color:var(--silver-dim);margin-bottom:14px">
                             <i class="fas fa-truck" style="color:var(--gold)"></i>
-                            Add <strong style="color:var(--gold)">$@((500 - Cart.Current.SubTotal).ToString("F2"))</strong> more for <strong style="color:var(--gold)">FREE shipping!</strong>
+                            Add <strong style="color:var(--gold)">$@((500 - CartSvc.Current.SubTotal).ToString("F2"))</strong> more for <strong style="color:var(--gold)">FREE shipping!</strong>
                         </div>
                     }
 
@@ -142,19 +142,19 @@
     protected override async Task OnInitializedAsync()
     {
         if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
-        await Cart.LoadAsync(); _loading = false;
+        await CartSvc.LoadAsync(); _loading = false;
     }
 
-    async Task Decr(CartItemDto i) { _busy = true; await Cart.UpdateQtyAsync(i.Id, i.Quantity - 1); _busy = false; }
-    async Task Incr(CartItemDto i) { _busy = true; await Cart.UpdateQtyAsync(i.Id, i.Quantity + 1); _busy = false; }
-    async Task Remove(CartItemDto i) { await Cart.RemoveAsync(i.Id); Toast.Info($"{i.ProductName} removed."); }
-    async Task Clear() { await Cart.ClearAsync(); Toast.Info("Cart cleared."); }
+    async Task Decr(CartItemDto i) { _busy = true; await CartSvc.UpdateQtyAsync(i.Id, i.Quantity - 1); _busy = false; }
+    async Task Incr(CartItemDto i) { _busy = true; await CartSvc.UpdateQtyAsync(i.Id, i.Quantity + 1); _busy = false; }
+    async Task Remove(CartItemDto i) { await CartSvc.RemoveAsync(i.Id); Toast.Info($"{i.ProductName} removed."); }
+    async Task Clear() { await CartSvc.ClearAsync(); Toast.Info("Cart cleared."); }
 
     async Task ApplyCoupon()
     {
         if (string.IsNullOrWhiteSpace(_coupon)) return;
         _applying = true;
-        if (await Cart.ApplyCouponAsync(_coupon)) { _couponOk = true; _couponMsg = "✓ Coupon applied!"; }
+        if (await CartSvc.ApplyCouponAsync(_coupon)) { _couponOk = true; _couponMsg = "✓ Coupon applied!"; }
         else { _couponOk = false; _couponMsg = "Invalid or expired coupon."; }
         _applying = false;
     }

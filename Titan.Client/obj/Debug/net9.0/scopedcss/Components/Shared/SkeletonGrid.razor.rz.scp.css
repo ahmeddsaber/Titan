@@ -1,0 +1,15 @@
+.skel[b-sqrck544cj] {
+    background: linear-gradient(90deg, var(--black-card) 25%, var(--black-border) 50%, var(--black-card) 75%);
+    background-size: 200% 100%;
+    animation: shimmer-b-sqrck544cj 1.4s infinite
+}
+
+@keyframes shimmer-b-sqrck544cj {
+    0% {
+        background-position: 200% 0
+    }
+
+    100% {
+        background-position: -200% 0
+    }
+}

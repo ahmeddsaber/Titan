@@ -1,0 +1,26 @@
+.t-admin[b-523sccxah0] {
+    width: 100%;
+    border-collapse: collapse
+}
+
+.t-admin th[b-523sccxah0] {
+    padding: 11px 15px;
+    text-align: left;
+    font-size: .72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--silver-dim);
+    border-bottom: 1px solid var(--black-border);
+    font-weight: 600
+}
+
+.t-admin td[b-523sccxah0] {
+    padding: 13px 15px;
+    border-bottom: 1px solid rgba(34,34,34,.5);
+    font-size: .88rem;
+    color: var(--silver)
+}
+
+.t-admin tr:hover td[b-523sccxah0] {
+    background: rgba(255,255,255,.015)
+}

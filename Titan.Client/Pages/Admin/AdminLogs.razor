@@ -1,4 +1,4 @@
-﻿@page "/admin/logs"
+@page "/admin/logs"
 @using Titan.Client.Services.Apibase
 @using Titan.Client.Services.Models
 @inject AuthService Auth
@@ -29,7 +29,7 @@
             <option value="Admin">Admin</option>
           </select>
           <button class="btn btn-outline-gold btn-sm" @onclick="Generate"><i class="fas fa-search"></i> Filter</button>
-          <button class="btn btn-outline-silver btn-sm" @onclick="()=>{_search=\"\";_actionFilter=\"\";Generate();}"><i class="fas fa-times"></i></button>
+          <button class="btn btn-outline-silver btn-sm" @onclick="ClearFilters"><i class="fas fa-times"></i></button>
         </div>
       </div>
 
@@ -56,19 +56,14 @@
   </div>
 </div>
 
-<style>
-  .t-admin{width:100%;border-collapse:collapse}
-  .t-admin th{padding:11px 15px;text-align:left;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--silver-dim);border-bottom:1px solid var(--black-border);font-weight:600}
-  .t-admin td{padding:13px 15px;border-bottom:1px solid rgba(34,34,34,.5);font-size:.88rem;color:var(--silver)}
-  .t-admin tr:hover td{background:rgba(255,255,255,.015)}
-</style>
-
 @code {
   record LogEntry(string Action, string User, string Details, string IP, DateTime Time);
   List<LogEntry> _logs = new();
   string _search = "", _actionFilter = "";
 
   protected override void OnInitialized() { if (!Auth.IsAdmin) return; Generate(); }
+
+  void ClearFilters() { _search = ""; _actionFilter = ""; Generate(); }
 
   void Generate()
   {

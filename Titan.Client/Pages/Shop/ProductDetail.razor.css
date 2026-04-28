@@ -1,0 +1,51 @@
+.skel {
+    background: linear-gradient(90deg, var(--black-card) 25%, var(--black-border) 50%, var(--black-card) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0
+    }
+
+    100% {
+        background-position: -200% 0
+    }
+}
+
+.size-btn {
+    padding: 7px 15px;
+    border: 1px solid var(--black-border);
+    border-radius: 5px;
+    background: var(--black);
+    color: var(--silver);
+    cursor: pointer;
+    transition: all .2s;
+    font-size: .82rem;
+    font-weight: 500
+}
+
+.size-btn:hover, .size-btn.active {
+    border-color: var(--gold);
+    color: var(--gold)
+}
+
+.share-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--black-border);
+    background: transparent;
+    color: var(--silver);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.share-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold)
+}

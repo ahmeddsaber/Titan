@@ -1,4 +1,4 @@
-﻿@* ── SkeletonGrid ── *@
+@* ── SkeletonGrid ── *@
 <div class="grid grid-4">
     @for (int i = 0; i < Count; i++)
     {
@@ -10,24 +10,5 @@
     }
 </div>
 
-<style>
-    .skel {
-        background: linear-gradient(90deg,var(--black-card) 25%,var(--black-border) 50%,var(--black-card) 75%);
-        background-size: 200% 100%;
-        animation: shimmer 1.4s infinite
-    }
-    @keyframes shimmer {
-        0%
-
-    {
-        background-position: 200% 0
-    }
-
-    100% {
-        background-position: -200% 0
-    }
-
-    }
-</style>
 
 @code { [Parameter] public int Count { get; set; } = 8; }

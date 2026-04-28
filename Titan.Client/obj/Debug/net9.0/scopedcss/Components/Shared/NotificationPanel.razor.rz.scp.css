@@ -1,0 +1,29 @@
+.notif-panel[b-w3yhpsf94p] {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: 340px;
+    background: var(--black-card);
+    border: 1px solid var(--black-border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow);
+    z-index: 999;
+    overflow: hidden
+}
+
+.notif-item[b-w3yhpsf94p] {
+    display: flex;
+    gap: 11px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--black-border);
+    cursor: pointer;
+    transition: var(--tr)
+}
+
+.notif-item:hover[b-w3yhpsf94p] {
+    background: rgba(212,175,55,.04)
+}
+
+.notif-item.unread[b-w3yhpsf94p] {
+    background: rgba(212,175,55,.03)
+}

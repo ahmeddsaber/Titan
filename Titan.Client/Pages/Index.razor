@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using Titan.Client.Services.Apibase
 @using Titan.Client.Services.AppServices
 @using Titan.Client.Services.Models
@@ -128,16 +128,6 @@
     </div>
   </section>
 }
-
-<style>
-  .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--black);position:relative;overflow:hidden;padding-top:70px}
-  .sec-header{text-align:center;margin-bottom:50px}
-  .sec-eye{font-size:.72rem;letter-spacing:6px;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
-  .sec-title{font-size:clamp(1.8rem,4vw,3rem);margin-bottom:12px}
-  .sec-sub{color:var(--silver-dim);max-width:480px;margin:0 auto}
-  .section{padding:72px 0}
-  .cat-card:hover img{transform:scale(1.05)}
-</style>
 
 @code {
   List<ProductDto>  _featured = new(), _newest = new(), _recs = new();

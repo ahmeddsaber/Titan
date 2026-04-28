@@ -1,4 +1,4 @@
-﻿@page "/admin/products"
+@page "/admin/products"
 @using Titan.Client.Services.Apibase
 @using Titan.Client.Services.AppServices
 @using Titan.Client.Services.Models
@@ -30,7 +30,7 @@
             @foreach (var c in CatSvc.All) { <option value="@c.Id">@c.Name</option> }
           </select>
           <button class="btn btn-outline-gold btn-sm" @onclick="Load"><i class="fas fa-search"></i></button>
-          <button class="btn btn-outline-silver btn-sm" @onclick="() => { _search=\"\"; _catF=\"\"; _ = Load(); }"><i class="fas fa-times"></i> Clear</button>
+          <button class="btn btn-outline-silver btn-sm" @onclick="ClearFilters"><i class="fas fa-times"></i> Clear</button>
         </div>
       </div>
 
@@ -158,21 +158,12 @@
   </div>
 }
 
-<style>
-  .t-titan{width:100%;border-collapse:collapse}
-  .t-titan th{padding:11px 15px;text-align:left;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--silver-dim);border-bottom:1px solid var(--black-border);font-weight:600}
-  .t-titan td{padding:14px 15px;border-bottom:1px solid rgba(34,34,34,.5);font-size:.88rem;color:var(--silver)}
-  .t-titan tr:hover td{background:rgba(255,255,255,.015)}
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;align-items:center;justify-content:center;padding:24px}
-  .modal-box{width:100%;max-width:660px;max-height:90vh;overflow-y:auto}
-  .page-btn{width:38px;height:38px;border-radius:var(--r);border:1px solid var(--black-border);background:var(--black-card);color:var(--silver);cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;font-size:.85rem}
-  .page-btn:hover,.page-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
-</style>
-
 @code {
   List<ProductDto> _products=new(); bool _loading=true,_showModal,_saving;
   string _search="",_catF="",_mErr=""; int _page=1,_totalPages=1,_total;
   Guid? _editId; ProductDto? _delTarget;
+
+  void ClearFilters() { _search = ""; _catF = ""; _ = Load(); }
 
   string _pName="",_pNameAr="",_pDesc="",_pSlug="",_pSku="",_pMainImg="",_pImgs="";
   decimal _pPrice,_pDiscount; int _pStock; string _pCatId="";

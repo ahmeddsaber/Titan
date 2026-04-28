@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "Titan.API\\Titan.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Titan.Client\\Titan.Client.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

@@ -1,5 +1,6 @@
-﻿@page "/shop"
+@page "/shop"
 @using Titan.Client.Services.AppServices
+@using Titan.Client.Services.Models
 @inject ProductService   Products
 @inject CategoryService  Categories
 @inject NavigationManager Nav
@@ -60,7 +61,7 @@
       <div style="flex:1;min-width:0">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
           <p style="color:var(--silver-dim);font-size:.85rem">Showing @_items.Count of @_total</p>
-          <select class="form-control" style="width:auto;padding:8px 14px;font-size:.85rem" @onchange="e => { _f.SortBy = e.Value?.ToString()??"newest"; _ = Load(); }">
+          <select class="form-control" style="width:auto;padding:8px 14px;font-size:.85rem" @onchange="OnSortChange">
             <option value="newest">Newest</option>
             <option value="popular">Most Popular</option>
             <option value="rating">Top Rated</option>
@@ -100,13 +101,6 @@
   </div>
 </div>
 
-<style>
-  .pagination{display:flex;align-items:center;gap:7px;justify-content:center}
-  .page-btn{width:38px;height:38px;border-radius:var(--r);border:1px solid var(--black-border);background:var(--black-card);color:var(--silver);cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;font-size:.85rem}
-  .page-btn:hover,.page-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
-  .page-btn:disabled{opacity:.35;cursor:not-allowed}
-</style>
-
 @code {
   [SupplyParameterFromQuery] public string? Search   { get; set; }
   [SupplyParameterFromQuery] public string? Category { get; set; }
@@ -118,6 +112,12 @@
   bool _loading = true, _onSale, _featured;
   int  _page = 1, _totalPages = 1, _total;
   CancellationTokenSource? _cts;
+
+  async Task OnSortChange(ChangeEventArgs e)
+  {
+    _f.SortBy = e.Value?.ToString() ?? "newest";
+    await Load();
+  }
 
   protected override async Task OnInitializedAsync()
   {

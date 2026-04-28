@@ -1,0 +1,165 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = Titan.Client
+build_property.RootNamespace = Titan.Client
+build_property.ProjectDir = D:\TestAPI(REfreshToken\Titan\Titan.Client\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = false
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\TestAPI(REfreshToken\Titan\Titan.Client
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Layout/AdminSidebar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcQWRtaW5TaWRlYmFyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Layout/TitanCartDrawer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcVGl0YW5DYXJ0RHJhd2VyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Layout/TitanFooter.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcVGl0YW5Gb290ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Layout/TitanNavbar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcVGl0YW5OYXZiYXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Admin/AdminCategories.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWRtaW5DYXRlZ29yaWVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Admin/AdminCoupons.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWRtaW5Db3Vwb25zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Admin/AdminOrders.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWRtaW5PcmRlcnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Shop/Checkout.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hvcFxDaGVja291dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/Cart.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxDYXJ0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/Notifications.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxOb3RpZmljYXRpb25zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/OrderDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxPcmRlckRldGFpbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/UserProfile.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxVc2VyUHJvZmlsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/Wishlist.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxXaXNobGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Weather.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VhdGhlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Product/ProductCard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQcm9kdWN0XFByb2R1Y3RDYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-zdlxgibhnf
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Shared/NotificationPanel.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcTm90aWZpY2F0aW9uUGFuZWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-w3yhpsf94p
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Shared/SkeletonGrid.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcU2tlbGV0b25HcmlkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-sqrck544cj
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Components/Shared/ToastContainer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcVG9hc3RDb250YWluZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-yl5pudqlym
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-oexs08pixa
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-scnnoz8b4c
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Admin/AdminDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWRtaW5EYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-je127e6dwe
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Admin/AdminLogs.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWRtaW5Mb2dzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-523sccxah0
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Admin/AdminProducts.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWRtaW5Qcm9kdWN0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-4c16s357nn
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Admin/AdminUsers.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWRtaW5Vc2Vycy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-deqksd3x9f
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Auth/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxMb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-x4p6pthfu5
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Auth/Register.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxSZWdpc3Rlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-f81itgoenh
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-78u3jlkyaw
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Shop/ProductDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hvcFxQcm9kdWN0RGV0YWlsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-5ckqnq10q1
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/Shop/Shop.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hvcFxTaG9wLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-b94dux51ss
+
+[D:/TestAPI(REfreshToken/Titan/Titan.Client/Pages/User/Orders.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclxPcmRlcnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-n584nl21g2

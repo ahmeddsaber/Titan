@@ -1,8 +1,8 @@
-﻿@page "/orders"
+@page "/orders"
 @using Titan.Client.Services.Apibase
 @using Titan.Client.Services.AppServices
 @using Titan.Client.Services.Models
-@inject OrderService  Orders
+@inject OrderService  OrderSvc
 @inject AuthService   Auth
 @inject NavigationManager Nav
 
@@ -30,7 +30,7 @@
       <div style="display:flex;flex-direction:column;gap:14px">
         @foreach (var o in _orders)
         {
-          <div class="card card-hover" style="cursor:pointer" @onclick="() => Nav.NavigateTo($\"/orders/{o.Id}\")">
+          <div class="card card-hover" style="cursor:pointer" @onclick="@(() => Nav.NavigateTo($"/orders/{o.Id}"))">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
               <div>
                 <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
@@ -77,11 +77,6 @@
   </div>
 </div>
 
-<style>
-  .page-btn{width:38px;height:38px;border-radius:var(--r);border:1px solid var(--black-border);background:var(--black-card);color:var(--silver);cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;font-size:.85rem}
-  .page-btn:hover,.page-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
-</style>
-
 @code {
   List<OrderDto> _orders = new();
   bool _loading=true;
@@ -96,7 +91,7 @@
   async Task Load()
   {
     _loading=true;
-    var r = await Orders.GetMyOrdersAsync(_page,10);
+    var r = await OrderSvc.GetMyOrdersAsync(_page,10);
     _orders=r?.Items??new(); _totalPages=r?.TotalPages??1;
     _loading=false;
   }

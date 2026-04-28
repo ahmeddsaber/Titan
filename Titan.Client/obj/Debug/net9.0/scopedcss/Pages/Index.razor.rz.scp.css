@@ -1,0 +1,42 @@
+.hero[b-78u3jlkyaw] {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    padding-top: 70px
+}
+
+.sec-header[b-78u3jlkyaw] {
+    text-align: center;
+    margin-bottom: 50px
+}
+
+.sec-eye[b-78u3jlkyaw] {
+    font-size: .72rem;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px
+}
+
+.sec-title[b-78u3jlkyaw] {
+    font-size: clamp(1.8rem,4vw,3rem);
+    margin-bottom: 12px
+}
+
+.sec-sub[b-78u3jlkyaw] {
+    color: var(--silver-dim);
+    max-width: 480px;
+    margin: 0 auto
+}
+
+.section[b-78u3jlkyaw] {
+    padding: 72px 0
+}
+
+.cat-card:hover img[b-78u3jlkyaw] {
+    transform: scale(1.05)
+}

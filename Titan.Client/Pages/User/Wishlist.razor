@@ -1,7 +1,7 @@
-﻿@page "/wishlist"
+@page "/wishlist"
 @using Titan.Client.Services.Apibase
 @using Titan.Client.Services.AppServices
-@inject WishlistService Wishlist
+@inject WishlistService WishlistSvc
 @inject AuthService     Auth
 @inject NavigationManager Nav
 
@@ -12,9 +12,9 @@
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:14px">
       <div>
         <h1 style="font-size:2rem;margin-bottom:4px">My Wishlist</h1>
-        <p style="color:var(--silver-dim)">@Wishlist.Count saved items</p>
+        <p style="color:var(--silver-dim)">@WishlistSvc.Count saved items</p>
       </div>
-      @if (Wishlist.Items.Any())
+      @if (WishlistSvc.Items.Any())
       { <a href="/shop" class="btn btn-outline-gold btn-sm"><i class="fas fa-shopping-bag"></i> Continue Shopping</a> }
     </div>
 
@@ -22,7 +22,7 @@
     {
       <SkeletonGrid Count="8" />
     }
-    else if (!Wishlist.Items.Any())
+    else if (!WishlistSvc.Items.Any())
     {
       <div class="card" style="text-align:center;padding:80px">
         <i class="far fa-heart" style="font-size:3.5rem;color:var(--gold);opacity:.25;margin-bottom:22px;display:block"></i>
@@ -34,8 +34,8 @@
     else
     {
       <div class="grid grid-4">
-        @foreach (var p in Wishlist.Items)
-        { <ProductCard Product="p" OnWishlistChanged="Wishlist.LoadAsync" /> }
+        @foreach (var p in WishlistSvc.Items)
+        { <ProductCard Product="p" OnWishlistChanged="WishlistSvc.LoadAsync" /> }
       </div>
     }
   </div>
@@ -47,10 +47,10 @@
   protected override async Task OnInitializedAsync()
   {
     if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
-    Wishlist.Changed += StateHasChanged;
-    await Wishlist.LoadAsync();
+    WishlistSvc.Changed += StateHasChanged;
+    await WishlistSvc.LoadAsync();
     _loading = false;
   }
 
-  public void Dispose() => Wishlist.Changed -= StateHasChanged;
+  public void Dispose() => WishlistSvc.Changed -= StateHasChanged;
 }

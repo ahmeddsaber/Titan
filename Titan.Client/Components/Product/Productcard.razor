@@ -1,5 +1,6 @@
-﻿@using Titan.Client.Services.Apibase
+@using Titan.Client.Services.Apibase
 @using Titan.Client.Services.AppServices
+@using Titan.Client.Services.Models
 @inject CartService Cart
 @inject WishlistService Wishlist
 @inject AuthService Auth
@@ -41,7 +42,7 @@
             </button>
             <button class="btn btn-outline-silver btn-sm"
                     @onclick:stopPropagation
-                    @onclick="() => JS.InvokeVoidAsync(`TitanJS.shareWhatsApp`, Product.Name,$" ${Product.CurrentPrice:F2}",Nav.BaseUri+`product /`+Product.Slug)">
+                    @onclick="ShareWhatsApp">
                 <i class="fab fa-whatsapp"></i>
             </button>
         </div>
@@ -78,32 +79,19 @@
     </div>
 </div>
 
-<style>
-    .card-actions {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: flex;
-        gap: 6px;
-        padding: 10px;
-        opacity: 0;
-        transform: translateY(8px);
-        transition: all .25s
-    }
-
-    .product-card:hover .card-actions {
-        opacity: 1;
-        transform: translateY(0)
-    }
-</style>
-
 @code {
     [Parameter, EditorRequired] public ProductDto Product { get; set; } = null!;
     [Parameter] public EventCallback OnWishlistChanged { get; set; }
     bool _adding;
 
     void Go() => Nav.NavigateTo($"/product/{Product.Slug}");
+
+    async Task ShareWhatsApp()
+    {
+        var priceStr = $" ${Product.CurrentPrice:F2}";
+        var url = Nav.BaseUri + "product/" + Product.Slug;
+        await JS.InvokeVoidAsync("TitanJS.shareWhatsApp", Product.Name, priceStr, url);
+    }
 
     async Task AddCart()
     {

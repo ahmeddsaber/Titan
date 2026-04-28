@@ -1,4 +1,4 @@
-﻿@page "/register"
+@page "/register"
 @using Titan.Client.Services.Apibase
 @using Titan.Client.Services.AppServices
 @inject AuthService Auth
@@ -48,7 +48,7 @@
             <input type="password" class="form-control" placeholder="Repeat password" @bind="_confirm" />
         </div>
 
-        <button class="btn btn-gold btn-block btn-lg" @onclick="Register" disabled="@_busy">
+        <button class="btn btn-gold btn-block btn-lg" @onclick="HandleRegister" disabled="@_busy">
             @if (_busy)
             {
                 <i class="fas fa-spinner fa-spin"></i>
@@ -68,35 +68,13 @@
     </div>
 </div>
 
-<style>
-    .auth-wrap {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 100px 24px 40px;
-        background: var(--black)
-    }
-
-    .alert-err {
-        background: rgba(229,62,62,.1);
-        border: 1px solid var(--danger);
-        border-radius: var(--r);
-        padding: 11px 14px;
-        margin-bottom: 18px;
-        color: #FC8181;
-        font-size: .85rem
-    }
-</style>
-
 @code {
     string _fn = "", _ln = "", _email = "", _phone = "", _pwd = "", _confirm = "", _err = "";
     bool _busy;
 
     protected override void OnInitialized() { if (Auth.IsAuthenticated) Nav.NavigateTo("/"); }
 
-    async Task Register()
+    async Task HandleRegister()
     {
         _err = "";
         if (string.IsNullOrWhiteSpace(_fn) || string.IsNullOrWhiteSpace(_email) || string.IsNullOrWhiteSpace(_pwd)) { _err = "Fill all required fields."; return; }

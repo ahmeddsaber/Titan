@@ -1,4 +1,4 @@
-﻿@page "/admin/users"
+@page "/admin/users"
 @using Titan.Client.Services.Apibase
 @using Titan.Client.Services.AppServices
 @using Titan.Client.Services.Models
@@ -59,7 +59,7 @@
                     {
                       <div style="display:flex;gap:7px">
                         @if (!u.IsBanned)
-                        { <button class="btn btn-danger btn-sm" @onclick="()=>{_banTarget=u;_showBan=true;}" title="Ban"><i class="fas fa-ban"></i></button> }
+                        { <button class="btn btn-danger btn-sm" @onclick="() => StartBan(u)" title="Ban"><i class="fas fa-ban"></i></button> }
                         else
                         { <button class="btn btn-outline-gold btn-sm" @onclick="()=>Unban(u)" title="Unban"><i class="fas fa-unlock"></i></button> }
                         <button class="btn btn-danger btn-sm" @onclick="()=>_delTarget=u" title="Delete"><i class="fas fa-trash"></i></button>
@@ -76,7 +76,7 @@
 
         @if (_totalPages > 1)
         {
-          <div style="display:flex;gap:7px;justify-content:center;margin-top:22px">
+          <div style="display:flex;gap:7px;justify-content:center;margin-top:24px">
             @for(int i=1;i<=_totalPages;i++){var pg=i;<button class="page-btn @(_page==pg?"active":"")" @onclick="()=>GoPage(pg)">@pg</button>}
           </div>
         }
@@ -96,7 +96,7 @@
         <textarea class="form-control" rows="3" @bind="_banReason" placeholder="Reason for ban…"></textarea>
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn btn-outline-silver" @onclick="()=>{_showBan=false;_banReason=\"\";}">Cancel</button>
+        <button class="btn btn-outline-silver" @onclick="CancelBan">Cancel</button>
         <button class="btn btn-danger" @onclick="BanUser"><i class="fas fa-ban"></i> Ban User</button>
       </div>
     </div>
@@ -119,21 +119,13 @@
   </div>
 }
 
-<style>
-  .t-admin{width:100%;border-collapse:collapse}
-  .t-admin th{padding:11px 15px;text-align:left;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--silver-dim);border-bottom:1px solid var(--black-border);font-weight:600}
-  .t-admin td{padding:14px 15px;border-bottom:1px solid rgba(34,34,34,.5);font-size:.88rem;color:var(--silver)}
-  .t-admin tr:hover td{background:rgba(255,255,255,.015)}
-  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;align-items:center;justify-content:center;padding:24px}
-  .modal-box{width:100%;max-width:620px;max-height:90vh;overflow-y:auto}
-  .page-btn{width:38px;height:38px;border-radius:var(--r);border:1px solid var(--black-border);background:var(--black-card);color:var(--silver);cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;font-size:.85rem}
-  .page-btn:hover,.page-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
-</style>
-
 @code {
   List<UserDto> _users=new(); bool _loading=true,_showBan;
   string _search="",_banReason=""; int _page=1,_totalPages=1,_total;
   UserDto? _banTarget,_delTarget;
+
+  void StartBan(UserDto u) { _banTarget = u; _showBan = true; }
+  void CancelBan() { _showBan = false; _banReason = ""; }
 
   protected override async Task OnInitializedAsync(){if(!Auth.IsAdmin)return;await Load();}
 
