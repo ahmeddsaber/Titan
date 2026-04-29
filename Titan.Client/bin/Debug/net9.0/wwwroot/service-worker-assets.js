@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "u7xKKtBt",
+  "version": "bV5dl3Bd",
   "assets": [
     {
       "hash": "sha256-ZsFSii8+kKw689Nq1p+3ceb11PwE2xTIhWQNiNN4Hro=",
@@ -794,19 +794,19 @@ self.assetsManifest = {
       "url": "_framework/System.Xml.XmlSerializer.1z2utc94ww.wasm"
     },
     {
-      "hash": "sha256-07OMksuG5Q+g3ZyZpLTXmXLRac6dVW9lYAwu0XLhCNY=",
-      "url": "_framework/Titan.Client.99mizu1nz3.pdb"
+      "hash": "sha256-pJZikHzReZp4ltjUlgqH+in/qfjSBNuzXWP6eG302Pc=",
+      "url": "_framework/Titan.Client.09qjzmzt99.pdb"
     },
     {
-      "hash": "sha256-NY9M8AD/gUHLtr+Ij5zbvEOkrHgg2MHNscyudVZ3yiY=",
-      "url": "_framework/Titan.Client.vrukcjqp7l.wasm"
+      "hash": "sha256-F/4BsETKL/lvC2SaefxY7bW3rhcRbwT/ldfNh5qgIZ4=",
+      "url": "_framework/Titan.Client.3p1it2ej3d.wasm"
     },
     {
       "hash": "sha256-dz62CHynC+zqTkbMOf3vm7YAhiRA8/pIoAwuqHfBL5M=",
       "url": "_framework/WindowsBase.pg3o6xzigg.wasm"
     },
     {
-      "hash": "sha256-zhNXk6Ufd4gtKoeRChYoOmlvKlUerLZEAVfg6e9mn2U=",
+      "hash": "sha256-xGFBdq0Xb/kwBOhu58Kvz+Z45a6nCeE5syb2vUdh8g0=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -858,7 +858,7 @@ self.assetsManifest = {
       "url": "_framework/netstandard.uriri6ambh.wasm"
     },
     {
-      "hash": "sha256-O+J81ftZ6tXyiL3udzrT2qJsRhT1elf+KcRQRlbLxKQ=",
+      "hash": "sha256-eXDAztTSpp59iENX6gyR7n0Mo6JuCCSsE0GRH4zkORs=",
       "url": "appsettings.json"
     },
     {
@@ -882,7 +882,11 @@ self.assetsManifest = {
       "url": "icon-512.png"
     },
     {
-      "hash": "sha256-GvB28/MMYYhwj+7DnuUFhZ9WBpCEt57DejtgH/oQmJQ=",
+      "hash": "sha256-neFH3CgLK+iHJB2sATU0h6wUHshHdAUaOvOEnB/j04s=",
+      "url": "images/titan-icon.png"
+    },
+    {
+      "hash": "sha256-6o/joyrybw5fUxOlULRZvkauFjXSxIMbFwz+fo25H0k=",
       "url": "index.html"
     },
     {
@@ -1064,6 +1068,10 @@ self.assetsManifest = {
     {
       "hash": "sha256-JFl3o408iKCD1pszTo6nYomISdl59KF0ljVW96IF9lg=",
       "url": "lib/bootstrap/dist/js/bootstrap.min.js.map"
+    },
+    {
+      "hash": "sha256-jdGqRzE1TeEfD6FiQxY+u5VYq7tkQy1hykKTFzHCL+0=",
+      "url": "manifest.json"
     },
     {
       "hash": "sha256-jdGqRzE1TeEfD6FiQxY+u5VYq7tkQy1hykKTFzHCL+0=",

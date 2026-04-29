@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Titan.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5514cb0ee0cb283d2f3a1dd7b2b309d39ce2ee08")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d03d027caf4a366f259f4c33eedea9c81ebfe9ae")]
 [assembly: System.Reflection.AssemblyProductAttribute("Titan.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Titan.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
