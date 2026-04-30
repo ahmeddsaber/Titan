@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "bV5dl3Bd",
+  "version": "rdRNxBiW",
   "assets": [
     {
       "hash": "sha256-ZsFSii8+kKw689Nq1p+3ceb11PwE2xTIhWQNiNN4Hro=",
@@ -794,19 +794,19 @@ self.assetsManifest = {
       "url": "_framework/System.Xml.XmlSerializer.1z2utc94ww.wasm"
     },
     {
-      "hash": "sha256-pJZikHzReZp4ltjUlgqH+in/qfjSBNuzXWP6eG302Pc=",
-      "url": "_framework/Titan.Client.09qjzmzt99.pdb"
+      "hash": "sha256-6xMI/1J/33VlRsS8JHzsRvZXV/bUqgRcATzmyw2NKAA=",
+      "url": "_framework/Titan.Client.fn2m9p7pqg.wasm"
     },
     {
-      "hash": "sha256-F/4BsETKL/lvC2SaefxY7bW3rhcRbwT/ldfNh5qgIZ4=",
-      "url": "_framework/Titan.Client.3p1it2ej3d.wasm"
+      "hash": "sha256-AiJoERmmBF43t8gxDC9EosNLW96hcM+ryQXy6H+6wzw=",
+      "url": "_framework/Titan.Client.uxgpc1p97e.pdb"
     },
     {
       "hash": "sha256-dz62CHynC+zqTkbMOf3vm7YAhiRA8/pIoAwuqHfBL5M=",
       "url": "_framework/WindowsBase.pg3o6xzigg.wasm"
     },
     {
-      "hash": "sha256-xGFBdq0Xb/kwBOhu58Kvz+Z45a6nCeE5syb2vUdh8g0=",
+      "hash": "sha256-312tEkIHVUb77yV4bK+EyK+krmpPY6XZwCZmJykNrqc=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -886,7 +886,7 @@ self.assetsManifest = {
       "url": "images/titan-icon.png"
     },
     {
-      "hash": "sha256-6o/joyrybw5fUxOlULRZvkauFjXSxIMbFwz+fo25H0k=",
+      "hash": "sha256-BWRX6byzG9ds6/uzGhe8hXm0Hm6mc8aIF8u66nJgXY4=",
       "url": "index.html"
     },
     {

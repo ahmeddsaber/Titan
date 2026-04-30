@@ -1,0 +1,16 @@
+D:\TestAPI(REfreshToken\Titan\Titan.Application\bin\Release\net9.0\Titan.Application.deps.json
+D:\TestAPI(REfreshToken\Titan\Titan.Application\bin\Release\net9.0\Titan.Application.dll
+D:\TestAPI(REfreshToken\Titan\Titan.Application\bin\Release\net9.0\Titan.Application.pdb
+D:\TestAPI(REfreshToken\Titan\Titan.Application\bin\Release\net9.0\Titan.Domain.dll
+D:\TestAPI(REfreshToken\Titan\Titan.Application\bin\Release\net9.0\Titan.Domain.pdb
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Application.csproj.AssemblyReference.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Application.AssemblyInfoInputs.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Application.AssemblyInfo.cs
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Application.csproj.CoreCompileInputs.cache
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Application.sourcelink.json
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Ap.1FE0E749.Up2Date
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Application.dll
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\refint\Titan.Application.dll
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\Titan.Application.pdb
+D:\TestAPI(REfreshToken\Titan\Titan.Application\obj\Release\net9.0\ref\Titan.Application.dll

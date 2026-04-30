@@ -10,6 +10,7 @@ using Titan.Infrastructure.Services;
 using Titan.Infrastructure.Hubs;
 
 // 1. Initial Logger Setup
+System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
@@ -29,7 +30,10 @@ try
     // 3. Database Connection
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure()));
+        options.UseSqlServer(connectionString, sql => {
+            sql.EnableRetryOnFailure();
+            sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+        }));
 
     // 4. JWT Authentication (Simple & Safe Fallback)
     var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "TITAN_FALLBACK_SECRET_KEY_FOR_DEVELOPMENT_32_CHARS";
@@ -45,7 +49,7 @@ try
                 ValidateAudience = true,
                 ValidAudience = builder.Configuration["Jwt:Audience"] ?? "titan-client",
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.FromMinutes(5)
             };
 
             // Support JWT for SignalR Hubs
@@ -142,7 +146,7 @@ try
         //c.RoutePrefix = "swagger"; // Opens at /swagger
     });
 
-    app.UseHttpsRedirection();
+    // app.UseHttpsRedirection(); // Causes 405 on SignalR negotiation redirects
     app.UseCors("TitanPolicy");
     app.UseAuthentication();
     app.UseAuthorization();

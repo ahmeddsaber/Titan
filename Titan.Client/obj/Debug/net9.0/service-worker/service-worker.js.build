@@ -1,4 +1,4 @@
-/* Manifest version: bV5dl3Bd */
+/* Manifest version: rdRNxBiW */
 const CACHE = 'titan-v1';
 const STATIC = ['/', '/css/titan.css', '/js/titan.js'];
 

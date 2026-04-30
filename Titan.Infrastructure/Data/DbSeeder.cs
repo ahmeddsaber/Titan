@@ -131,28 +131,28 @@ public static class DbSeeder
 
         // ================= PRODUCTS =================
         var productNames = new List<(string en, string ar)>
-    {
-        ("Classic Cotton Shirt","قميص قطني كلاسيك"),
-        ("Slim Fit Jeans","بنطلون جينز سليم فيت"),
-        ("Casual Sneakers","كوتشي كاجوال"),
-        ("Training Shoes","حذاء رياضي"),
-        ("Basic T-Shirt","تيشيرت ساده"),
-        ("Hoodie","هودي"),
-        ("Leather Wallet","محفظة جلد"),
-        ("Wrist Watch","ساعة يد"),
-        ("Summer Dress","فستان صيفي"),
-        ("Casual Blazer","بليزر"),
-        ("Running Shorts","شورت رياضي"),
-        ("Denim Jacket","جاكيت جينز"),
-        ("Pajama Set","بيجامة"),
-        ("Formal Shoes","حذاء رسمي"),
-        ("Backpack","شنطة ظهر"),
-        ("Cap","كاب"),
-        ("Winter Coat","معطف"),
-        ("Loose Pants","بنطلون واسع"),
-        ("Tank Top","فانلة"),
-        ("Slip-On Shoes","حذاء سهل")
-    };
+        {
+            ("Classic Cotton Shirt","قميص قطني كلاسيك"),
+            ("Slim Fit Jeans","بنطلون جينز سليم فيت"),
+            ("Casual Sneakers","كوتشي كاجوال"),
+            ("Training Shoes","حذاء رياضي"),
+            ("Basic T-Shirt","تيشيرت ساده"),
+            ("Hoodie","هودي"),
+            ("Leather Wallet","محفظة جلد"),
+            ("Wrist Watch","ساعة يد"),
+            ("Summer Dress","فستان صيفي"),
+            ("Casual Blazer","بليزر"),
+            ("Running Shorts","شورت رياضي"),
+            ("Denim Jacket","جاكيت جينز"),
+            ("Pajama Set","بيجامة"),
+            ("Formal Shoes","حذاء رسمي"),
+            ("Backpack","شنطة ظهر"),
+            ("Cap","كاب"),
+            ("Winter Coat","معطف"),
+            ("Loose Pants","بنطلون واسع"),
+            ("Tank Top","فانلة"),
+            ("Slip-On Shoes","حذاء سهل")
+        };
 
         var products = new List<Product>();
 
@@ -161,11 +161,20 @@ public static class DbSeeder
             var exists = await context.Products.AnyAsync(x => x.Name == p.en);
             if (exists) continue;
 
+            var slug = p.en.ToLower().Replace(" ", "-").Replace("'", "");
+            var baseSlug = slug;
+            int counter = 1;
+            while (await context.Products.AnyAsync(x => x.Slug == slug))
+            {
+                slug = $"{baseSlug}-{counter++}";
+            }
+
             var product = new Product
             {
                 Name = p.en,
                 NameAr = p.ar,
                 Description = "منتج عالي الجودة مناسب للاستخدام اليومي",
+                Slug = slug,
                 Price = random.Next(200, 2000),
                 DiscountPrice = random.Next(100, 150),
                 StockQuantity = random.Next(5, 50),
@@ -207,10 +216,10 @@ public static class DbSeeder
         if (!await context.Coupons.AnyAsync())
         {
             context.Coupons.AddRange(new List<Coupon>
-        {
-            new Coupon { Code="SALE10", DiscountType=DiscountType.Percentage, DiscountValue=10, IsActive=true },
-            new Coupon { Code="SALE20", DiscountType=DiscountType.Percentage, DiscountValue=20, IsActive=true }
-        });
+            {
+                new Coupon { Code="SALE10", DiscountType=DiscountType.Percentage, DiscountValue=10, IsActive=true },
+                new Coupon { Code="SALE20", DiscountType=DiscountType.Percentage, DiscountValue=20, IsActive=true }
+            });
         }
 
         // ================= ORDERS =================
