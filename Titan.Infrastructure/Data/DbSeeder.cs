@@ -33,7 +33,7 @@ public static class DbSeeder
     private static async Task SeedAdminUserAsync(ApplicationDbContext context)
     {
         const string adminEmail = "admin@titan.com";
-        
+
         if (await context.Users.AnyAsync(u => u.Email == adminEmail))
             return;
 
@@ -43,7 +43,7 @@ public static class DbSeeder
             FirstName = "TITAN",
             LastName = "Admin",
             Email = adminEmail,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"), // Secure runtime hashing
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
             Role = "Admin",
             IsActive = true,
             CreatedAt = DateTime.UtcNow
@@ -60,38 +60,37 @@ public static class DbSeeder
 
         var categories = new List<Category>
         {
-            new Category 
-            { 
-                Id = Guid.Parse("00000000-0000-0000-0000-000000000010"), 
-                Name = "Men", 
-                NameAr = "رجال", 
-                Slug = "men", 
-                DisplayOrder = 1, 
-                IsActive = true, 
-                CreatedAt = DateTime.UtcNow 
+            new Category
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000010"),
+                Name = "Men",
+                NameAr = "رجال",
+                Slug = "men",
+                DisplayOrder = 1,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
             },
-            new Category 
-            { 
-                Id = Guid.Parse("00000000-0000-0000-0000-000000000011"), 
-                Name = "Women", 
-                NameAr = "نساء", 
-                Slug = "women", 
-                DisplayOrder = 2, 
-                IsActive = true, 
-                CreatedAt = DateTime.UtcNow 
+            new Category
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000011"),
+                Name = "Women",
+                NameAr = "نساء",
+                Slug = "women",
+                DisplayOrder = 2,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
             },
-            new Category 
-            { 
-                Id = Guid.Parse("00000000-0000-0000-0000-000000000012"), 
-                Name = "Accessories", 
-                NameAr = "إكسسوارات", 
-                Slug = "accessories", 
-                DisplayOrder = 3, 
-                IsActive = true, 
-                CreatedAt = DateTime.UtcNow 
+            new Category
+            {
+                Id = Guid.Parse("00000000-0000-0000-0000-000000000012"),
+                Name = "Accessories",
+                NameAr = "إكسسوارات",
+                Slug = "accessories",
+                DisplayOrder = 3,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
             }
         };
-
 
         context.Categories.AddRange(categories);
         await context.SaveChangesAsync();
@@ -164,7 +163,12 @@ public static class DbSeeder
             var slug = p.en.ToLower().Replace(" ", "-").Replace("'", "");
             var baseSlug = slug;
             int counter = 1;
-            while (await context.Products.AnyAsync(x => x.Slug == slug))
+
+            // ✅ الإصلاح هنا
+            while (
+                await context.Products.AnyAsync(x => x.Slug == slug)
+                || products.Any(x => x.Slug == slug)
+            )
             {
                 slug = $"{baseSlug}-{counter++}";
             }
@@ -221,88 +225,6 @@ public static class DbSeeder
                 new Coupon { Code="SALE20", DiscountType=DiscountType.Percentage, DiscountValue=20, IsActive=true }
             });
         }
-
-        // ================= ORDERS =================
-        foreach (var user in allUsers.Take(10))
-        {
-            var product = allProducts[random.Next(allProducts.Count)];
-
-            var order = new Order
-            {
-                OrderNumber = $"ORD-{Guid.NewGuid().ToString().Substring(0, 6)}",
-                UserId = user.Id,
-                SubTotal = product.Price,
-                ShippingCost = 50,
-                TotalAmount = product.Price + 50,
-                ShippingFullName = user.FullName,
-                ShippingAddress = "Sohag",
-                ShippingCity = "Sohag",
-                ShippingCountry = "Egypt",
-                ShippingPhone = "01000000000"
-            };
-
-            context.Orders.Add(order);
-            await context.SaveChangesAsync();
-
-            context.OrderItems.Add(new OrderItem
-            {
-                OrderId = order.Id,
-                ProductId = product.Id,
-                ProductName = product.Name,
-                Quantity = 1,
-                UnitPrice = product.Price,
-                TotalPrice = product.Price
-            });
-        }
-
-        // ================= REVIEWS =================
-        foreach (var user in allUsers)
-        {
-            var product = allProducts[random.Next(allProducts.Count)];
-
-            if (!await context.Reviews.AnyAsync(r => r.UserId == user.Id && r.ProductId == product.Id))
-            {
-                context.Reviews.Add(new Review
-                {
-                    UserId = user.Id,
-                    ProductId = product.Id,
-                    Rating = random.Next(3, 5),
-                    Comment = "منتج ممتاز وأنصح به"
-                });
-            }
-        }
-
-        // ================= WISHLIST =================
-        foreach (var user in allUsers)
-        {
-            var product = allProducts[random.Next(allProducts.Count)];
-
-            if (!await context.WishlistItems.AnyAsync(w => w.UserId == user.Id && w.ProductId == product.Id))
-            {
-                context.WishlistItems.Add(new WishlistItem
-                {
-                    UserId = user.Id,
-                    ProductId = product.Id
-                });
-            }
-        }
-
-        // ================= NOTIFICATIONS =================
-        context.Notifications.AddRange(allUsers.Select(u => new Notification
-        {
-            UserId = u.Id,
-            Title = "Welcome",
-            Message = "أهلاً بيك في Titan 👋",
-            Type = NotificationType.Welcome
-        }));
-
-        // ================= PRODUCT VIEWS =================
-        context.ProductViews.AddRange(allUsers.Select(u => new ProductView
-        {
-            UserId = u.Id,
-            ProductId = allProducts[random.Next(allProducts.Count)].Id,
-            ViewCount = random.Next(1, 20)
-        }));
 
         await context.SaveChangesAsync();
     }

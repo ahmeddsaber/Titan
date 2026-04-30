@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Titan.Client",
   "resources": {
-    "hash": "sha256-oBJtXLbwWM7MNcn4RyjP2nYVgflV8aXfOYMwtWC7D1Y=",
+    "hash": "sha256-G8Ng5Iih0X397R7dNPHvfYDjE9o+rYtUE7KBOXwkufY=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Authorization.bvu82j4ad3.wasm": "Microsoft.AspNetCore.Authorization.wasm",
       "Microsoft.AspNetCore.Components.ptfrz3fits.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -210,8 +210,8 @@
       "icudt_CJK.tjcz0u77k5.dat": "icudt_CJK.dat",
       "icudt_EFIGS.tptq2av103.dat": "icudt_EFIGS.dat",
       "icudt_no_CJK.lfu7j35m59.dat": "icudt_no_CJK.dat",
-      "Titan.Client.fn2m9p7pqg.wasm": "Titan.Client.wasm",
-      "Titan.Client.uxgpc1p97e.pdb": "Titan.Client.pdb"
+      "Titan.Client.d65gusbnnq.wasm": "Titan.Client.wasm",
+      "Titan.Client.ly7h0jiwsz.pdb": "Titan.Client.pdb"
     },
     "jsModuleNative": {
       "dotnet.native.st0ovrfdhi.js": "sha256-MBW/zayfv+YU6mhH7y4b8NNU4D1EYd7nf9gYrFshnnY="
@@ -430,10 +430,10 @@
       "WindowsBase.pg3o6xzigg.wasm": "sha256-dz62CHynC+zqTkbMOf3vm7YAhiRA8/pIoAwuqHfBL5M=",
       "mscorlib.jl2pswegra.wasm": "sha256-mSoCIDTdCQKTipW8VmFCypW/4AopZauaYRa8LoZdHvY=",
       "netstandard.uriri6ambh.wasm": "sha256-yuH/cvPd6r8N9nfPWihyckFD7hPFP+VQtQQxEqi7HIQ=",
-      "Titan.Client.fn2m9p7pqg.wasm": "sha256-6xMI/1J/33VlRsS8JHzsRvZXV/bUqgRcATzmyw2NKAA="
+      "Titan.Client.d65gusbnnq.wasm": "sha256-y0PdLfiydeG16KoO87JycLmkGAkiblb+7XbYgPMgxqg="
     },
     "pdb": {
-      "Titan.Client.uxgpc1p97e.pdb": "sha256-AiJoERmmBF43t8gxDC9EosNLW96hcM+ryQXy6H+6wzw="
+      "Titan.Client.ly7h0jiwsz.pdb": "sha256-jY71E1uKjOQRTyrOImrFDMP1MTi13WDvo4NBYn1zZAA="
     }
   },
   "cacheBootResources": true,
