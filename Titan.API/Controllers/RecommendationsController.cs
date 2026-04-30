@@ -12,7 +12,18 @@ namespace Titan.API.Controllers
     public class RecommendationsController : ControllerBase
     {
         private readonly IRecommendationService _recommendationService;
-        private Guid UserId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        private Guid UserId
+        {
+            get
+            {
+                var value = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(value))
+                    throw new Exception("UserId claim is missing in token");
+
+                return Guid.Parse(value);
+            }
+        }
         public RecommendationsController(IRecommendationService recommendationService) { _recommendationService = recommendationService; }
 
         [HttpGet]

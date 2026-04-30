@@ -116,6 +116,18 @@ try
     builder.Services.AddCors(o => o.AddPolicy("TitanPolicy", p =>
         p.SetIsOriginAllowed(_ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
+
+
+
+    builder.Services.AddCors(o => o.AddPolicy("TitanPolicy", p =>
+    {
+        p.WithOrigins(
+            "http://localhost:5213"
+           
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod().AllowCredentials();
+    }));
     builder.Services.AddHealthChecks();
 
     var app = builder.Build();

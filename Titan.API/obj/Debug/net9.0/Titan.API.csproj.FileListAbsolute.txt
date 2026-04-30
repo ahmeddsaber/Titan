@@ -177,10 +177,10 @@ D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\staticwebassets.build.j
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\staticwebassets.build.json.cache
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\staticwebassets.development.json
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\Titan.API.csproj.Up2Date
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\Titan.API.dll
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\refint\Titan.API.dll
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\Titan.API.pdb
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\Titan.API.genruntimeconfig.cache
 D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\ref\Titan.API.dll
-D:\TestAPI(REfreshToken\Titan\Titan.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
