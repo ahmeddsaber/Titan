@@ -203,8 +203,9 @@
         _ => "badge-warning"
     };
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
         SignalR.OnOrderUpdate -= HandleOrderUpdate;
+        return ValueTask.CompletedTask;
     }
 }

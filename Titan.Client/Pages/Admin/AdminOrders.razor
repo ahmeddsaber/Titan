@@ -309,8 +309,9 @@
 
     async Task Print() => await JS.InvokeVoidAsync("TitanJS.printElement", "order-print");
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
         SignalR.OnOrderUpdate -= HandleOrderUpdate;
+        return ValueTask.CompletedTask;
     }
 }
