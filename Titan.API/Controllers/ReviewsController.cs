@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,8 +12,11 @@ namespace Titan.API.Controllers
     public class ReviewsController : ControllerBase
     {
         private readonly IReviewService _reviewService;
-        private Guid? UserId => User.Identity?.IsAuthenticated == true ? Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!) : null;
         public ReviewsController(IReviewService reviewService) { _reviewService = reviewService; }
+
+        // FIX #3: Safe UserId extraction
+        private bool TryGetUserId(out Guid userId)
+            => Guid.TryParse(User.Identity?.Name, out userId);
 
         [HttpGet("product/{productId:guid}")]
         public async Task<IActionResult> GetProductReviews(Guid productId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10) =>
@@ -22,14 +25,16 @@ namespace Titan.API.Controllers
         [HttpPost, Authorize]
         public async Task<IActionResult> Create([FromBody] CreateReviewDto dto)
         {
-            var result = await _reviewService.CreateReviewAsync(UserId!.Value, dto);
+            if (!TryGetUserId(out var userId)) return Unauthorized();
+            var result = await _reviewService.CreateReviewAsync(userId, dto);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpDelete("{id:guid}"), Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _reviewService.DeleteReviewAsync(id, UserId!.Value, User.IsInRole("Admin"));
+            if (!TryGetUserId(out var userId)) return Unauthorized();
+            var result = await _reviewService.DeleteReviewAsync(id, userId, User.IsInRole("Admin"));
             return result.Success ? Ok(result) : BadRequest(result);
         }
 

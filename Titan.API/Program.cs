@@ -8,6 +8,8 @@ using Titan.Application.Interfaces;
 using Titan.Infrastructure.Data;
 using Titan.Infrastructure.Services;
 using Titan.Infrastructure.Hubs;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 // 1. Initial Logger Setup
 System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -49,7 +51,9 @@ try
                 ValidateAudience = true,
                 ValidAudience = builder.Configuration["Jwt:Audience"] ?? "titan-client",
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.FromMinutes(5)
+                ClockSkew = TimeSpan.FromMinutes(5),
+                NameClaimType = JwtRegisteredClaimNames.Sub,
+                RoleClaimType = ClaimTypes.Role
             };
 
             // Support JWT for SignalR Hubs
@@ -59,7 +63,8 @@ try
                 {
                     var accessToken = context.Request.Query["access_token"];
                     var path = context.HttpContext.Request.Path;
-                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                    if (!string.IsNullOrEmpty(accessToken) && 
+                        (path.StartsWithSegments("/hubs") || path.Value.Contains("/negotiate")))
                     {
                         context.Token = accessToken;
                     }
@@ -84,13 +89,14 @@ try
     builder.Services.AddScoped<INotificationService, NotificationService>();
     builder.Services.AddScoped<IUserService, UserService>();
 
-    // 6. Controllers, SignalR, and CORS
+    // 6. Controllers, SignalR, and Swagger
     builder.Services.AddControllers()
         .AddJsonOptions(options => {
             options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
         });
 
     builder.Services.AddSignalR();
+    builder.Services.AddSingleton<Microsoft.AspNetCore.SignalR.IUserIdProvider, Titan.Infrastructure.Hubs.CustomUserIdProvider>();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(c =>
     {
@@ -113,21 +119,27 @@ try
         });
     });
 
-    builder.Services.AddCors(o => o.AddPolicy("TitanPolicy", p =>
-        p.SetIsOriginAllowed(_ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
-
-
-
-
-    builder.Services.AddCors(o => o.AddPolicy("TitanPolicy", p =>
+    // ╔═══════════════════════════════════════════════════════════════╗
+    // ║  FIX #1: CORS — ONE policy, specific origins + credentials  ║
+    // ║  CAUSE: Two AddCors() calls overwrote each other, and       ║
+    // ║         SetIsOriginAllowed(_ => true) is insecure.           ║
+    // ╚═══════════════════════════════════════════════════════════════╝
+    builder.Services.AddCors(options =>
     {
-        p.WithOrigins(
-            "http://localhost:5213"
-           
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod().AllowCredentials();
-    }));
+        options.AddPolicy("TitanPolicy", policy =>
+        {
+            policy.WithOrigins(
+                    "http://localhost:5213",
+                    "https://localhost:5213",
+                    "https://titanstore.runasp.net", // Added correct frontend URL
+                    "https://titans.runasp.net"
+                )
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
+    });
+
     builder.Services.AddHealthChecks();
 
     var app = builder.Build();
@@ -149,24 +161,52 @@ try
         }
     }
 
-    // 8. Middleware Pipeline (Order is Important)
+    // ╔═══════════════════════════════════════════════════════════════╗
+    // ║  8. Middleware Pipeline — ORDER MATTERS!                     ║
+    // ║  FIX #2: CORS must run BEFORE Authentication & Routing      ║
+    // ║  FIX #3: Global error handler catches unhandled 500s        ║
+    // ╚═══════════════════════════════════════════════════════════════╝
+
+    // 8.0 Global Exception Handler (catches unhandled exceptions → returns JSON instead of 500)
+    app.UseExceptionHandler(error =>
+    {
+        error.Run(async context =>
+        {
+            context.Response.StatusCode = 500;
+            context.Response.ContentType = "application/json";
+            var ex = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+            Log.Error(ex?.Error, "Unhandled exception on {Path}", context.Request.Path);
+            await context.Response.WriteAsJsonAsync(new
+            {
+                success = false,
+                message = "An internal server error occurred. Please try again later.",
+                detail = app.Environment.IsDevelopment() ? ex?.Error?.Message : null
+            });
+        });
+    });
+
+    // 8.1 Swagger (available in all environments for your hosted API)
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "TITAN API v1");
         c.RoutePrefix = "";
-        //c.RoutePrefix = "swagger"; // Opens at /swagger
     });
+  
 
-    // app.UseHttpsRedirection(); // Causes 405 on SignalR negotiation redirects
+    // 8.2 CORS — must be BEFORE auth and routing
     app.UseCors("TitanPolicy");
+
+    // 8.3 Auth
     app.UseAuthentication();
     app.UseAuthorization();
 
+    // 8.4 Endpoints
     app.MapControllers();
     app.MapHub<TitanHub>("/hubs/titan");
     app.MapHealthChecks("/health");
-    app.MapGet("/", () => "TITAN API is running ??");
+    app.MapGet("/ping", () => "TITAN API is running 🚀");
+    
     app.Run();
 }
 catch (Exception ex)

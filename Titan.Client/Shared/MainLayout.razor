@@ -2,31 +2,30 @@
 @using Titan.Client.Services.AppServices
 @using Titan.Client.Services.Models
 @inherits LayoutComponentBase
-@inject AuthService      Auth
-@inject CartService      Cart
+@inject AuthService Auth
+@inject CartService Cart
 @inject NotificationService Notifs
-@inject SignalRService   SignalR
-@inject ToastService     Toast
-@inject IJSRuntime       JS
+@inject SignalRService SignalR
+@inject ToastService Toast
+@inject IJSRuntime JS
 @inject NavigationManager Nav
 @implements IAsyncDisposable
 
 <TitanNavbar />
 <TitanCartDrawer />
 <ToastContainer />
-
 <main class="main-content">@Body</main>
-
 <TitanFooter />
 
 @code {
     protected override async Task OnInitializedAsync()
     {
         await Auth.InitAsync();
-        Auth.StateChanged  += Refresh;
-        Cart.Changed       += Refresh;
-        Toast.Changed      += Refresh;
-        Notifs.Changed     += Refresh;
+        
+        Auth.StateChanged += Refresh;
+        Cart.Changed += Refresh;
+        Toast.Changed += Refresh;
+        Notifs.Changed += Refresh;
 
         if (Auth.IsAuthenticated)
         {
@@ -38,32 +37,61 @@
 
     private async Task ConnectHubAsync()
     {
-        var token = await Auth.GetAccessTokenAsync();
-        if (string.IsNullOrEmpty(token)) return;
+        if (!Auth.IsAuthenticated) return;
+
         SignalR.OnNotification += HandleNotif;
-        SignalR.OnOrderUpdate  += HandleOrder;
-        await SignalR.ConnectAsync(Nav.BaseUri, token);
+        SignalR.OnOrderUpdate += HandleOrder;
+
+        try
+        {
+            await SignalR.ConnectAsync();
+            Console.WriteLine("[SignalR] Connection started successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[SignalR] Connection failed: {ex.Message}");
+        }
     }
 
     private void HandleNotif(NotificationDto n)
-    { Notifs.PushRealTime(n); Toast.Info(n.Title); InvokeAsync(StateHasChanged); }
+    {
+        Notifs.PushRealTime(n);
+        Toast.Info(n.Title);
+        InvokeAsync(StateHasChanged);
+    }
 
     private void HandleOrder(OrderDto o)
-    { Toast.Info($"Order {o.OrderNumber} → {o.Status}"); InvokeAsync(StateHasChanged); }
+    {
+        Toast.Info($"Order {o.OrderNumber} → {o.Status}");
+        InvokeAsync(StateHasChanged);
+    }
 
     protected override async Task OnAfterRenderAsync(bool first)
-    { if (first) try { await JS.InvokeVoidAsync("TitanJS.hideSplash"); } catch { } }
+    {
+        if (first)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("TitanJS.hideSplash");
+            }
+            catch { }
+        }
+    }
 
     private void Refresh() => InvokeAsync(StateHasChanged);
 
     public async ValueTask DisposeAsync()
     {
-        Auth.StateChanged  -= Refresh;
-        Cart.Changed       -= Refresh;
-        Toast.Changed      -= Refresh;
-        Notifs.Changed     -= Refresh;
-        SignalR.OnNotification -= HandleNotif;
-        SignalR.OnOrderUpdate  -= HandleOrder;
-        await SignalR.DisposeAsync();
+        Auth.StateChanged -= Refresh;
+        Cart.Changed -= Refresh;
+        Toast.Changed -= Refresh;
+        Notifs.Changed -= Refresh;
+        
+        if (SignalR != null)
+        {
+            SignalR.OnNotification -= HandleNotif;
+            SignalR.OnOrderUpdate -= HandleOrder;
+            await SignalR.DisposeAsync();
+        }
     }
 }

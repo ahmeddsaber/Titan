@@ -101,27 +101,22 @@ public static class DbSeeder
         var random = new Random();
 
         // ================= USERS =================
-        var users = new List<User>();
-
         for (int i = 1; i <= 20; i++)
         {
             var email = $"user{i}@test.com";
-
-            if (await context.Users.AnyAsync(u => u.Email == email))
-                continue;
-
-            users.Add(new User
+            if (!await context.Users.AnyAsync(u => u.Email == email))
             {
-                FirstName = "User",
-                LastName = i.ToString(),
-                Email = email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
-                Role = "Customer"
-            });
+                context.Users.Add(new User
+                {
+                    FirstName = "User",
+                    LastName = i.ToString(),
+                    Email = email,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
+                    Role = "Customer"
+                });
+                await context.SaveChangesAsync(); // Save each to avoid local tracking issues in loop
+            }
         }
-
-        context.Users.AddRange(users);
-        await context.SaveChangesAsync();
 
         var allUsers = await context.Users.ToListAsync();
 

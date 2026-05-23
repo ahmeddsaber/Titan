@@ -1,6 +1,4 @@
-@using Titan.Client.Services.Apibase
-@using Titan.Client.Services.AppServices
-@using Titan.Client.Services.Models
+@namespace Titan.Client.Components.Product
 @inject CartService Cart
 @inject WishlistService Wishlist
 @inject AuthService Auth
@@ -9,9 +7,8 @@
 @inject IJSRuntime JS
 
 <div class="product-card" @onclick="Go">
-
-    <div style="position:relative;overflow:hidden;aspect-ratio:3/4">
-        <img src="@(Product.MainImageUrl.Length > 0 ? Product.MainImageUrl : "/images/placeholder.jpg")"
+    <div class="product-image-container" style="position:relative;overflow:hidden;aspect-ratio:3/4">
+        <img src="@(!string.IsNullOrEmpty(Product.MainImageUrl) ? Product.MainImageUrl : "/images/placeholder.jpg")"
              alt="@Product.Name" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .5s" />
 
         @if (Product.HasDiscount)
@@ -21,28 +18,31 @@
 
         @if (Auth.IsAuthenticated)
         {
-            <button class="product-card__wishlist @(Wishlist.Has(Product.Id) ? "active" : "")"
+            <button class="product-card__wishlist @(IsWishlisted ? "active" : "")"
                     @onclick:stopPropagation @onclick="ToggleWishlist">
-                <i class="@(Wishlist.Has(Product.Id) ? "fas" : "far") fa-heart"></i>
+                <i class="@(IsWishlisted ? "fas" : "far") fa-heart"></i>
             </button>
         }
 
         <div class="card-actions">
-            <button class="btn btn-gold btn-sm" style="flex:1" @onclick:stopPropagation @onclick="AddCart" disabled="@(Product.StockQuantity == 0 || _adding)">
+            <button class="btn btn-gold btn-sm" 
+                    style="flex:1" 
+                    @onclick:stopPropagation 
+                    @onclick="AddCart" 
+                    disabled="@IsCartButtonDisabled">
                 @if (_adding)
                 {
                     <i class="fas fa-spinner fa-spin"></i>
                 }
                 else
                 {
-
                     <i class="fas fa-bag-shopping"></i>
                 }
                 @(Product.StockQuantity == 0 ? "Out of Stock" : "Add to Cart")
             </button>
             <button class="btn btn-outline-silver btn-sm"
                     @onclick:stopPropagation
-                    @onclick="ShareWhatsApp">
+                    @onclick="ShareOnWhatsApp">
                 <i class="fab fa-whatsapp"></i>
             </button>
         </div>
@@ -82,32 +82,50 @@
 @code {
     [Parameter, EditorRequired] public ProductDto Product { get; set; } = null!;
     [Parameter] public EventCallback OnWishlistChanged { get; set; }
-    bool _adding;
+    
+    private bool _adding;
+    private bool IsWishlisted => Wishlist.Has(Product.Id);
+    private bool IsCartButtonDisabled => Product.StockQuantity == 0 || _adding;
 
-    void Go() => Nav.NavigateTo($"/product/{Product.Slug}");
+    private void Go() => Nav.NavigateTo($"/product/{Product.Slug}");
 
-    async Task ShareWhatsApp()
+    private async Task AddCart()
     {
-        var priceStr = $" ${Product.CurrentPrice:F2}";
-        var url = Nav.BaseUri + "product/" + Product.Slug;
-        await JS.InvokeVoidAsync("TitanJS.shareWhatsApp", Product.Name, priceStr, url);
-    }
-
-    async Task AddCart()
-    {
-        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        if (!Auth.IsAuthenticated) 
+        { 
+            Nav.NavigateTo("/login"); 
+            return; 
+        }
+        
         _adding = true;
         var r = await Cart.AddAsync(Product.Id);
-        if (r?.Success == true) Toast.Success($"{Product.Name} added to cart!");
-        else Toast.Error(r?.Message ?? "Could not add to cart.");
+        
+        if (r?.Success == true) 
+            Toast.Success($"{Product.Name} added to cart!");
+        else 
+            Toast.Error(r?.Message ?? "Could not add to cart.");
+            
         _adding = false;
     }
 
-    async Task ToggleWishlist()
+    private async Task ToggleWishlist()
     {
-        if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
+        if (!Auth.IsAuthenticated) 
+        { 
+            Nav.NavigateTo("/login"); 
+            return; 
+        }
+        
         var added = await Wishlist.ToggleAsync(Product.Id);
         Toast.Info(added ? "Added to wishlist ❤️" : "Removed from wishlist");
         await OnWishlistChanged.InvokeAsync();
     }
+
+    private async Task ShareOnWhatsApp()
+    {
+        var message = $"{Product.Name} - ${Product.CurrentPrice:F2}";
+        var url = $"{Nav.BaseUri}product/{Product.Slug}";
+        await JS.InvokeVoidAsync("TitanJS.shareWhatsApp", message, url);
+    }
 }
+

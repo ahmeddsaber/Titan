@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Titan.Domain.Enum;
 
-namespace Titan.Application.DTOs.Order
+namespace Titan.Application.DTOs.Order;
+
+/// <summary>
+/// DTO sent by the admin client to update an order's status.
+/// Plain class (not positional record) so System.Text.Json can bind
+/// the JSON body properties by name without a [JsonConstructor].
+/// </summary>
+public class UpdateOrderStatusDto
 {
-    public record UpdateOrderStatusDto(OrderStatus Status, string? Note);
+    public OrderStatus Status { get; set; }
+    public string?     Note   { get; set; }
 }

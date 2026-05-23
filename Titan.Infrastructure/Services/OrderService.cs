@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,16 @@ namespace Titan.Infrastructure.Services
     {
         private readonly ApplicationDbContext _db;
         private readonly INotificationService _notificationService;
+        private readonly Microsoft.AspNetCore.SignalR.IHubContext<Titan.Infrastructure.Hubs.TitanHub> _hubContext;
 
-        public OrderService(ApplicationDbContext db, INotificationService notificationService)
+        public OrderService(
+            ApplicationDbContext db, 
+            INotificationService notificationService,
+            Microsoft.AspNetCore.SignalR.IHubContext<Titan.Infrastructure.Hubs.TitanHub> hubContext)
         {
             _db = db;
             _notificationService = notificationService;
+            _hubContext = hubContext;
         }
 
         public async Task<ApiResponse<OrderDto>> CreateFromCartAsync(Guid userId, CreateOrderDto dto)
@@ -148,35 +154,193 @@ namespace Titan.Infrastructure.Services
 
         public async Task<ApiResponse<OrderDto>> UpdateStatusAsync(Guid orderId, UpdateOrderStatusDto dto, Guid adminId)
         {
-            var order = await _db.Orders.Include(o => o.Items).Include(o => o.StatusHistory).FirstOrDefaultAsync(o => o.Id == orderId);
-            if (order == null) return ApiResponse<OrderDto>.Fail("Order not found.");
-            order.Status = dto.Status;
-            if (dto.Status == OrderStatus.Delivered) order.DeliveredAt = DateTime.UtcNow;
-            order.StatusHistory.Add(new OrderStatusHistory { Status = dto.Status, Note = dto.Note, ChangedByUserId = adminId });
-            await _db.SaveChangesAsync();
-            await _notificationService.SendOrderNotificationAsync(order.UserId, order.OrderNumber, dto.Status);
-            return ApiResponse<OrderDto>.Ok(MapOrder(order));
+            if (dto == null)
+                return ApiResponse<OrderDto>.Fail("Invalid update request DTO.");
+
+            if (!Enum.IsDefined(typeof(OrderStatus), dto.Status))
+                return ApiResponse<OrderDto>.Fail("?????? ???????? ??? ?????.");
+            
+
+            var order = await _db.Orders
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                .Include(o => o.StatusHistory)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+                return ApiResponse<OrderDto>.Fail("Order not found.");
+
+            // Stock restoration if transitioning to Cancelled from another state
+            if (dto.Status == OrderStatus.Cancelled && order.Status != OrderStatus.Cancelled)
+            {
+                RestoreStock(order);
+            }
+
+            order.Status    = dto.Status;
+            order.UpdatedAt = DateTime.UtcNow;
+
+            if (dto.Status == OrderStatus.Delivered)
+                order.DeliveredAt = DateTime.UtcNow;
+
+            // Ensure collection is not null
+            order.StatusHistory ??= new List<OrderStatusHistory>();
+
+            // Explicitly set OrderId and Order to prevent EF tracking/validation conflicts
+            var historyEntry = new OrderStatusHistory
+            {
+                OrderId          = order.Id,
+                Order            = order,
+                Status           = dto.Status,
+                Note             = dto.Note,
+                ChangedByUserId  = adminId,
+                CreatedAt        = DateTime.UtcNow
+            };
+            order.StatusHistory.Add(historyEntry);
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<OrderDto>.Fail($"Failed to update order status: {ex.Message}");
+            }
+
+            // Re-query with AsNoTracking so the returned DTO reflects the DB state
+            // (not the in-memory tracked object which may have stale defaults)
+            Order? fresh = null;
+            try
+            {
+                fresh = await _db.Orders
+                    .Include(o => o.Items)
+                    .Include(o => o.StatusHistory)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(o => o.Id == orderId);
+            }
+            catch (Exception)
+            {
+                // Fall back gracefully to the tracked entity if AsNoTracking query fails
+            }
+
+            var orderDto = MapOrder(fresh ?? order);
+
+            // 1. Send database-backed notification to the customer (awaited inside request scope)
+            try
+            {
+                await _notificationService.SendOrderNotificationAsync(order.UserId, order.OrderNumber, dto.Status);
+            }
+            catch (Exception)
+            {
+                // Safely catch notification DB insert/SignalR exceptions so it never blocks the request or rolls back order updates
+            }
+
+            // 2. Broadcast real-time order update via SignalR to the customer and all connected admins
+            try
+            {
+                // Send to customer
+                await _hubContext.Clients.User(order.UserId.ToString())
+                    .SendAsync("OrderStatusUpdated", orderDto);
+
+                // Send to all connected Admins to update their dashboard in real-time
+                await _hubContext.Clients.Group("admins")
+                    .SendAsync("OrderStatusUpdated", orderDto);
+            }
+            catch (Exception)
+            {
+                // Safely ignore/log SignalR broadcast failures
+            }
+
+            return ApiResponse<OrderDto>.Ok(orderDto);
         }
 
         public async Task<ApiResponse<bool>> CancelOrderAsync(Guid orderId, Guid userId)
         {
-            var order = await _db.Orders.Include(o => o.Items).ThenInclude(i => i.Product)
+            var order = await _db.Orders
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                .Include(o => o.StatusHistory)
                 .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId);
-            if (order == null) return ApiResponse<bool>.Fail("Order not found.");
-            if (order.Status != OrderStatus.Pending && order.Status != OrderStatus.Confirmed)
+
+            if (order == null)
+                return ApiResponse<bool>.Fail("Order not found.");
+
+            if (!CanBeCancelled(order.Status))
                 return ApiResponse<bool>.Fail("Order cannot be cancelled at this stage.");
 
+            order.StatusHistory ??= new List<OrderStatusHistory>();
+
             order.Status = OrderStatus.Cancelled;
+            order.UpdatedAt = DateTime.UtcNow;
+
+            RestoreStock(order);
+
+            // Explicitly set OrderId and Order to prevent EF tracking/validation conflicts
+            var historyEntry = new OrderStatusHistory
+            {
+                OrderId         = order.Id,
+                Order           = order,
+                Status          = OrderStatus.Cancelled,
+                Note            = "Cancelled by customer",
+                ChangedByUserId = userId,
+                CreatedAt       = DateTime.UtcNow
+            };
+            order.StatusHistory.Add(historyEntry);
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse<bool>.Fail($"Failed to cancel order: {ex.Message}");
+            }
+
+            var orderDto = MapOrder(order);
+
+            // 1. Send database-backed notification to the customer
+            try
+            {
+                await _notificationService.SendOrderNotificationAsync(order.UserId, order.OrderNumber, OrderStatus.Cancelled);
+            }
+            catch (Exception)
+            {
+                // Safely catch notification exceptions
+            }
+
+            // 2. Broadcast real-time order update via SignalR to the customer and all connected admins
+            try
+            {
+                // Send to customer
+                await _hubContext.Clients.User(order.UserId.ToString())
+                    .SendAsync("OrderStatusUpdated", orderDto);
+
+                // Send to all connected Admins to update their dashboard in real-time
+                await _hubContext.Clients.Group("admins")
+                    .SendAsync("OrderStatusUpdated", orderDto);
+            }
+            catch (Exception)
+            {
+                // Safely ignore SignalR broadcast failures
+            }
+
+            return ApiResponse<bool>.Ok(true, "Order cancelled successfully.");
+        }
+        private static bool CanBeCancelled(OrderStatus status)
+        {
+            return status is OrderStatus.Pending or OrderStatus.Confirmed;
+        }
+        private static void RestoreStock(Order order)
+        {
+            if (order == null || order.Items == null) return;
+
             foreach (var item in order.Items)
             {
-                var product = await _db.Products.FindAsync(item.ProductId);
-                if (product != null) { product.StockQuantity += item.Quantity; product.SoldCount -= item.Quantity; }
-            }
-            order.StatusHistory.Add(new OrderStatusHistory { Status = OrderStatus.Cancelled, Note = "Cancelled by customer.", ChangedByUserId = userId });
-            await _db.SaveChangesAsync();
-            return ApiResponse<bool>.Ok(true, "Order cancelled.");
-        }
+                if (item == null || item.Product == null) continue;
 
+                item.Product.StockQuantity += item.Quantity;
+                item.Product.SoldCount = Math.Max(0, item.Product.SoldCount - item.Quantity);
+            }
+        }
         private async Task<OrderDto> GetOrderDtoAsync(Guid orderId)
         {
             var order = await _db.Orders.Include(o => o.Items).Include(o => o.StatusHistory).FirstOrDefaultAsync(o => o.Id == orderId);

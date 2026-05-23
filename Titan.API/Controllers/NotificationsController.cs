@@ -11,11 +11,37 @@ namespace Titan.API.Controllers;
 public class NotificationsController : ControllerBase
 {
     private readonly INotificationService _notificationService;
-    private Guid UserId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     public NotificationsController(INotificationService notificationService) { _notificationService = notificationService; }
 
-    [HttpGet] public async Task<IActionResult> Get([FromQuery] int count = 20) => Ok(await _notificationService.GetUserNotificationsAsync(UserId, count));
-    [HttpGet("unread-count")] public async Task<IActionResult> UnreadCount() => Ok(await _notificationService.GetUnreadCountAsync(UserId));
-    [HttpPut("{id:guid}/read")] public async Task<IActionResult> MarkRead(Guid id) => Ok(await _notificationService.MarkAsReadAsync(id, UserId));
-    [HttpPut("mark-all-read")] public async Task<IActionResult> MarkAllRead() => Ok(await _notificationService.MarkAllAsReadAsync(UserId));
+    // FIX #3: Safe UserId extraction
+    private bool TryGetUserId(out Guid userId)
+        => Guid.TryParse(User.Identity?.Name, out userId);
+
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] int count = 20)
+    {
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+        return Ok(await _notificationService.GetUserNotificationsAsync(userId, count));
+    }
+
+    [HttpGet("unread-count")]
+    public async Task<IActionResult> UnreadCount()
+    {
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+        return Ok(await _notificationService.GetUnreadCountAsync(userId));
+    }
+
+    [HttpPut("{id:guid}/read")]
+    public async Task<IActionResult> MarkRead(Guid id)
+    {
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+        return Ok(await _notificationService.MarkAsReadAsync(id, userId));
+    }
+
+    [HttpPut("mark-all-read")]
+    public async Task<IActionResult> MarkAllRead()
+    {
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+        return Ok(await _notificationService.MarkAllAsReadAsync(userId));
+    }
 }

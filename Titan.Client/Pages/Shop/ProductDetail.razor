@@ -1,11 +1,8 @@
 @page "/product/{Slug}"
-@using Titan.Client.Services.Apibase
-@using Titan.Client.Services.AppServices
-@using Titan.Client.Services.Models
-@inject ProductService  Products
-@inject CartService     Cart
-@inject WishlistService Wishlist
-@inject ReviewService   Reviews
+@inject ProductService  ProductSvc
+@inject CartService     CartSvc
+@inject WishlistService WishlistSvc
+@inject ReviewService   ReviewSvc
 @inject AuthService     Auth
 @inject ToastService    Toast
 @inject NavigationManager Nav
@@ -48,7 +45,7 @@
       <!-- IMAGES -->
       <div>
         <div style="border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--black-border);aspect-ratio:3/4;cursor:zoom-in"
-             @onclick="OpenLightbox">
+             @onclick='() => JS.InvokeVoidAsync("TitanJS.openLightbox",_img)'>
           <img src="@_img" alt="@_product.Name" style="width:100%;height:100%;object-fit:cover" />
         </div>
         @if (_product.Images.Count > 1)
@@ -143,7 +140,7 @@
             Add to Cart
           </button>
           <button class="btn btn-outline-gold btn-lg" @onclick="ToggleWishlist">
-            <i class="@(Wishlist.Has(_product.Id)?"fas":"far") fa-heart"></i>
+            <i class='@(WishlistSvc.Has(_product.Id)?"fas":"far") fa-heart'></i>
           </button>
         </div>
 
@@ -218,6 +215,12 @@
   </div>
 </div>
 
+<style>
+  .size-btn{padding:7px 15px;border:1px solid var(--black-border);border-radius:5px;background:var(--black);color:var(--silver);cursor:pointer;transition:all .2s;font-size:.82rem;font-weight:500}
+  .size-btn:hover,.size-btn.active{border-color:var(--gold);color:var(--gold)}
+  .share-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--black-border);background:transparent;color:var(--silver);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+  .share-btn:hover{border-color:var(--gold);color:var(--gold)}
+</style>
 
 @code {
   [Parameter] public string Slug { get; set; } = "";
@@ -244,7 +247,7 @@
   protected override async Task OnParametersSetAsync()
   {
     _loading   = true;
-    _product   = await Products.GetBySlugAsync(Slug);
+    _product   = await ProductSvc.GetBySlugAsync(Slug);
     if (_product is not null)
     {
       _img         = _product.MainImageUrl;
@@ -253,23 +256,21 @@
       _selColor    = _selVariant?.Color ?? "";
       _shareButtons = ShareButtons;
 
-      var rev = await Reviews.GetProductReviewsAsync(_product.Id);
+      var rev = await ReviewSvc.GetProductReviewsAsync(_product.Id);
       _reviews     = rev?.Items ?? new();
       _userReviewed = Auth.IsAuthenticated && _reviews.Any(r => r.UserId == Auth.User?.Id);
-      _related     = await Products.GetRelatedAsync(_product.Id) ?? new();
+      _related     = await ProductSvc.GetRelatedAsync(_product.Id) ?? new();
 
-      if (Auth.IsAuthenticated) await Products.RecordViewAsync(_product.Id);
+      if (Auth.IsAuthenticated) await ProductSvc.RecordViewAsync(_product.Id);
     }
     _loading = false;
   }
-
-  async Task OpenLightbox() => await JS.InvokeVoidAsync("TitanJS.openLightbox", _img);
 
   async Task AddToCart()
   {
     if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
     _adding = true;
-    var r = await Cart.AddAsync(_product!.Id, _qty, _selVariant?.Id);
+    var r = await CartSvc.AddAsync(_product!.Id, _qty, _selVariant?.Id);
     if (r?.Success == true) Toast.Success("Added to cart!");
     else Toast.Error(r?.Message ?? "Failed.");
     _adding = false;
@@ -278,7 +279,7 @@
   async Task ToggleWishlist()
   {
     if (!Auth.IsAuthenticated) { Nav.NavigateTo("/login"); return; }
-    await Wishlist.ToggleAsync(_product!.Id);
+    await WishlistSvc.ToggleAsync(_product!.Id);
     StateHasChanged();
   }
 
@@ -286,7 +287,7 @@
   {
     if (_newRating < 1 || string.IsNullOrWhiteSpace(_newComment)) return;
     _submitting = true;
-    var r = await Reviews.CreateAsync(_product!.Id, _newRating, _newComment);
+    var r = await ReviewSvc.CreateAsync(_product!.Id, _newRating, _newComment);
     if (r?.Success == true && r.Data is not null)
     { Toast.Success("Review submitted!"); _reviews.Insert(0, r.Data); _userReviewed = true; _newComment = ""; }
     else Toast.Error(r?.Message ?? "Failed.");

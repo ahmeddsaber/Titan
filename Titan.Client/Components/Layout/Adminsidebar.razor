@@ -1,111 +1,59 @@
-<aside class="admin-sidebar">
-    <div class="sidebar-header">
-        <h2 style="color: var(--gold); font-family: 'Montserrat', sans-serif; font-weight: 800; letter-spacing: 2px;">TITAN</h2>
-        <p style="font-size: 0.7rem; color: var(--silver-dim); text-transform: uppercase;">Admin Panel</p>
+@inject AuthService Auth
+@inject NavigationManager Nav
+
+<aside style="width:252px;min-height:calc(100vh - 70px);background:var(--black-card);border-right:1px solid var(--black-border);padding:24px 0;flex-shrink:0;position:sticky;top:70px;height:calc(100vh - 70px);overflow-y:auto;display:flex;flex-direction:column">
+
+    <div style="padding:0 22px 22px;border-bottom:1px solid var(--black-border);margin-bottom:8px">
+        <div class="brand-font" style="font-size:1.6rem;letter-spacing:5px;color:var(--white)">TIT<span style="color:var(--gold)">A</span>N</div>
+        <p style="font-size:.68rem;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-top:2px">Admin Panel</p>
     </div>
 
-    <nav class="sidebar-nav">
-        <a href="/admin" class="nav-item @(Active == "dashboard" ? "active" : "")">
-            <i class="fas fa-th-large"></i>
-            <span>Dashboard</span>
-        </a>
-        <a href="/admin/products" class="nav-item @(Active == "products" ? "active" : "")">
-            <i class="fas fa-box"></i>
-            <span>Products</span>
-        </a>
-        <a href="/admin/categories" class="nav-item @(Active == "categories" ? "active" : "")">
-            <i class="fas fa-tags"></i>
-            <span>Categories</span>
-        </a>
-        <a href="/admin/orders" class="nav-item @(Active == "orders" ? "active" : "")">
-            <i class="fas fa-shopping-bag"></i>
-            <span>Orders</span>
-        </a>
-        <a href="/admin/users" class="nav-item @(Active == "users" ? "active" : "")">
-            <i class="fas fa-users"></i>
-            <span>Users</span>
-        </a>
-        <a href="/admin/coupons" class="nav-item @(Active == "coupons" ? "active" : "")">
-            <i class="fas fa-ticket-alt"></i>
-            <span>Coupons</span>
-        </a>
-        <a href="/admin/logs" class="nav-item @(Active == "logs" ? "active" : "")">
-            <i class="fas fa-history"></i>
-            <span>Logs</span>
-        </a>
+    <nav style="flex:1">
+        <ul style="list-style:none">
+            @foreach (var m in _menu)
+            {
+                var active = Active == m.key;
+                <li>
+                    <a href="@m.href"
+                       style="display:flex;align-items:center;gap:11px;padding:11px 22px;text-decoration:none;font-size:.85rem;font-weight:600;transition:all .2s;
+                        border-right:2px solid @(active ? "var(--gold)" : "transparent");
+                        color:@(active ? "var(--gold)" : "var(--silver)");
+                        background:@(active ? "rgba(212,175,55,.07)" : "transparent")">
+                        <i class="@m.icon" style="width:16px;text-align:center;opacity:@(active ? "1" : ".6")"></i>
+                        @m.label
+                    </a>
+                </li>
+            }
+        </ul>
     </nav>
 
-    <div class="sidebar-footer">
-        <a href="/" class="nav-item">
-            <i class="fas fa-external-link-alt"></i>
-            <span>Back to Shop</span>
+    <div style="padding:18px 22px;border-top:1px solid var(--black-border)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(212,175,55,.1);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.85rem;flex-shrink:0">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div style="min-width:0">
+                <p style="color:var(--white);font-size:.82rem;font-weight:700;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@Auth.User?.FullName</p>
+                <p style="color:var(--silver-dim);font-size:.72rem;margin:0">Administrator</p>
+            </div>
+        </div>
+        <a href="/" style="display:flex;align-items:center;gap:7px;color:var(--silver-dim);font-size:.78rem;text-decoration:none">
+            <i class="fas fa-store"></i> Back to Store
         </a>
     </div>
 </aside>
 
-<style>
-    .admin-sidebar {
-        width: 260px;
-        background: var(--black-card);
-        border-right: 1px solid var(--black-border);
-        height: calc(100vh - 90px);
-        position: sticky;
-        top: 90px;
-        display: flex;
-        flex-direction: column;
-        padding: 20px 0;
-    }
-
-    .sidebar-header {
-        padding: 0 24px 24px;
-        border-bottom: 1px solid var(--black-border);
-        margin-bottom: 20px;
-    }
-
-    .sidebar-nav {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding: 0 12px;
-    }
-
-    .nav-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        color: var(--silver-dim);
-        text-decoration: none;
-        border-radius: var(--r);
-        transition: all 0.2s;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-
-    .nav-item:hover {
-        background: rgba(212, 175, 55, 0.05);
-        color: var(--white);
-    }
-
-    .nav-item.active {
-        background: linear-gradient(90deg, rgba(212, 175, 55, 0.15), transparent);
-        color: var(--gold);
-        border-left: 3px solid var(--gold);
-    }
-
-    .nav-item i {
-        width: 20px;
-        text-align: center;
-        font-size: 1.1rem;
-    }
-
-    .sidebar-footer {
-        padding: 20px 12px 0;
-        border-top: 1px solid var(--black-border);
-    }
-</style>
-
 @code {
     [Parameter] public string Active { get; set; } = "";
+
+    readonly (string key, string label, string icon, string href)[] _menu =
+    [
+      ("dashboard",  "Dashboard",      "fas fa-chart-pie",     "/admin"),
+    ("products",   "Products",       "fas fa-tshirt",        "/admin/products"),
+    ("categories", "Categories",     "fas fa-tags",          "/admin/categories"),
+    ("orders",     "Orders",         "fas fa-shopping-cart", "/admin/orders"),
+    ("users",      "Users",          "fas fa-users",         "/admin/users"),
+    ("coupons",    "Coupons",        "fas fa-ticket-alt",    "/admin/coupons"),
+    ("logs",       "Activity Logs",  "fas fa-history",       "/admin/logs"),
+  ];
 }

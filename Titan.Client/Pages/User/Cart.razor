@@ -1,7 +1,4 @@
 @page "/cart"
-@using Titan.Client.Services.Apibase
-@using Titan.Client.Services.AppServices
-@using Titan.Client.Services.Models
 @inject CartService CartSvc
 @inject AuthService Auth
 @inject ToastService Toast
@@ -118,7 +115,6 @@
                             <span style="color:var(--gold)">$@CartSvc.Current.TotalAmount.ToString("F2")</span>
                         </div>
                     </div>
-
                     @if (CartSvc.Current.ShippingCost > 0)
                     {
                         <div style="padding:10px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.15);border-radius:6px;font-size:.78rem;color:var(--silver-dim);margin-bottom:14px">

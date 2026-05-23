@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Titan.Application.DTOs;
@@ -13,18 +13,25 @@ namespace Titan.API.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
-    private Guid UserId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-    private bool IsAdmin => User.IsInRole("Admin");
-
     public UsersController(IUserService userService) { _userService = userService; }
 
+    // FIX #3: Safe UserId extraction
+    private bool TryGetUserId(out Guid userId)
+        => Guid.TryParse(User.Identity?.Name, out userId);
+    private bool IsAdmin => User.IsInRole("Admin");
+
     [HttpGet("me")]
-    public async Task<IActionResult> GetMe() => Ok(await _userService.GetByIdAsync(UserId));
+    public async Task<IActionResult> GetMe()
+    {
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+        return Ok(await _userService.GetByIdAsync(userId));
+    }
 
     [HttpPut("profile")]
     public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
     {
-        var result = await _userService.UpdateProfileAsync(UserId, dto);
+        if (!TryGetUserId(out var userId)) return Unauthorized();
+        var result = await _userService.UpdateProfileAsync(userId, dto);
         return result.Success ? Ok(result) : BadRequest(result);
     }
 

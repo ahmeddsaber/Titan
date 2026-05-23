@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -14,8 +14,7 @@ namespace Titan.API.Controllers
         private readonly IProductService _productService;
         public ProductsController(IProductService productService) { _productService = productService; }
 
-        private Guid? CurrentUserId => User.Identity?.IsAuthenticated == true
-            ? Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!) : null;
+        private Guid? CurrentUserId => Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : null;
 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] ProductFilterDto filter) =>
@@ -61,7 +60,7 @@ namespace Titan.API.Controllers
         [HttpPost("{id:guid}/view"), Authorize]
         public async Task<IActionResult> RecordView(Guid id)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId)) return Unauthorized();
             await _productService.RecordViewAsync(id, userId);
             return NoContent();
         }

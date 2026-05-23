@@ -1,4 +1,6 @@
-﻿namespace Titan.Client.Services.Models
+using Titan.Domain.Enum;
+
+namespace Titan.Client.Services.Models
 {
     public class OrderStatusHistoryDto
     {

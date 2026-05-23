@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -37,14 +37,14 @@ namespace Titan.Infrastructure.Services
 
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role, user.Role),
-            new Claim("firstName", user.FirstName),
-            new Claim("lastName", user.LastName),
-            new Claim("profileImage", user.ProfileImageUrl ?? "")
-        };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("firstName", user.FirstName),
+                new Claim("lastName", user.LastName),
+                new Claim("profileImage", user.ProfileImageUrl ?? "")
+            };
 
             var token = new JwtSecurityToken(
                 issuer: _issuer,
@@ -67,9 +67,13 @@ namespace Titan.Infrastructure.Services
 
         public Guid? GetUserIdFromToken(string token)
         {
+            if (string.IsNullOrEmpty(token)) return null;
+
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
+                tokenHandler.InboundClaimTypeMap.Clear(); // Ensure consistent claim mapping
+
                 var key = Encoding.UTF8.GetBytes(_secret);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
@@ -77,12 +81,18 @@ namespace Titan.Infrastructure.Services
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    ValidateLifetime = false
+                    ValidateLifetime = false // Allow extraction from expired tokens
                 }, out var validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
-                return userId != null ? Guid.Parse(userId) : null;
+                
+                // Try to find the user ID claim in various possible formats
+                var userIdClaim = jwtToken.Claims.FirstOrDefault(c => 
+                    c.Type == JwtRegisteredClaimNames.Sub || 
+                    c.Type == "sub" || 
+                    c.Type == ClaimTypes.NameIdentifier);
+
+                return userIdClaim != null ? Guid.Parse(userIdClaim.Value) : null;
             }
             catch
             {

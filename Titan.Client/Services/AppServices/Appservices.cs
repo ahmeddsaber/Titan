@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.JSInterop;
+using Blazored.LocalStorage;
 using Titan.Client.Services.Models;
 
 using Titan.Client.Services.Apibase;
+using Titan.Domain.Enum;
 
 namespace Titan.Client.Services.AppServices
 {
@@ -12,7 +13,7 @@ namespace Titan.Client.Services.AppServices
 // ════════════ PRODUCT ════════════════════════════════════════
 public class ProductService : ApiBase
 {
-    public ProductService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public ProductService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task<PagedList<ProductDto>?> GetAllAsync(ProductFilter f)
         => (await GetAsync<PagedList<ProductDto>>($"api/products{Q(f)}"))?.Data;
@@ -47,7 +48,7 @@ public class CategoryService : ApiBase
 {
     public List<CategoryDto> All { get; private set; } = new();
 
-    public CategoryService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public CategoryService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task LoadAsync()
     { All = (await GetAsync<List<CategoryDto>>("api/categories"))?.Data ?? new(); }
@@ -69,7 +70,7 @@ public class CartService : ApiBase
     public CartSummaryDto? Current   { get; private set; }
     public int             Count     => Current?.TotalItems ?? 0;
 
-    public CartService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public CartService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task<CartSummaryDto?> LoadAsync(string? coupon = null)
     {
@@ -121,7 +122,7 @@ public class CartService : ApiBase
 // ════════════ ORDER ══════════════════════════════════════════
 public class OrderService : ApiBase
 {
-    public OrderService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public OrderService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task<PagedList<OrderDto>?> GetMyOrdersAsync(int page = 1, int size = 10)
         => (await GetAsync<PagedList<OrderDto>>($"api/orders?page={page}&pageSize={size}"))?.Data;
@@ -144,38 +145,15 @@ public class OrderService : ApiBase
     }
 
     public async Task<ApiResult<OrderDto>?> UpdateStatusAsync(Guid id, OrderStatus status, string? note = null)
-        => await PutAsync<OrderDto>($"api/orders/{id}/status", new { status, note });
-}
+        => await PutAsync<OrderDto>($"api/orders/{id}/status", new UpdateOrderStatusDto { Status = status, Note = note });
 
-// ════════════ WISHLIST ════════════════════════════════════════
-public class WishlistService : ApiBase
-{
-    public event Action?        Changed;
-    public List<ProductDto>     Items { get; private set; } = new();
-    public int                  Count => Items.Count;
 
-    public WishlistService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
-
-    public async Task LoadAsync()
-    { Items = (await GetAsync<List<ProductDto>>("api/wishlist"))?.Data ?? new(); Changed?.Invoke(); }
-
-    public bool Has(Guid id) => Items.Any(p => p.Id == id);
-
-    public async Task<bool> ToggleAsync(Guid productId)
-    {
-        var wasIn = Has(productId);
-        var r = wasIn
-            ? await DelAsync<bool>($"api/wishlist/{productId}")
-            : await PostAsync<bool>($"api/wishlist/{productId}");
-        if (r?.Success == true) await LoadAsync();
-        return !wasIn;
-    }
 }
 
 // ════════════ REVIEW ══════════════════════════════════════════
 public class ReviewService : ApiBase
 {
-    public ReviewService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public ReviewService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task<PagedList<ReviewDto>?> GetProductReviewsAsync(Guid productId, int page = 1)
         => (await GetAsync<PagedList<ReviewDto>>($"api/reviews/product/{productId}?page={page}&pageSize=10"))?.Data;
@@ -197,7 +175,7 @@ public class NotificationService : ApiBase
     public List<NotificationDto>   Items       { get; private set; } = new();
     public int                     UnreadCount => Items.Count(n => !n.IsRead);
 
-    public NotificationService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public NotificationService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task LoadAsync(int count = 30)
     { Items = (await GetAsync<List<NotificationDto>>($"api/notifications?count={count}"))?.Data ?? new(); Changed?.Invoke(); }
@@ -223,7 +201,7 @@ public class NotificationService : ApiBase
 // ════════════ USER ════════════════════════════════════════════
 public class UserService : ApiBase
 {
-    public UserService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public UserService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task<UserDto?> GetMeAsync()
         => (await GetAsync<UserDto>("api/users/me"))?.Data;
@@ -254,7 +232,7 @@ public class UserService : ApiBase
 // ════════════ COUPON ══════════════════════════════════════════
 public class CouponService : ApiBase
 {
-    public CouponService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public CouponService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task<PagedList<CouponDto>?> GetAllAsync(int page = 1)
         => (await GetAsync<PagedList<CouponDto>>($"api/coupons?page={page}&pageSize=30"))?.Data;
@@ -272,7 +250,7 @@ public class CouponService : ApiBase
 // ════════════ RECOMMENDATION ══════════════════════════════════
 public class RecommendationService : ApiBase
 {
-    public RecommendationService(HttpClient h, IJSRuntime j, NavigationManager n) : base(h, j, n) { }
+    public RecommendationService(HttpClient h, ILocalStorageService s, NavigationManager n) : base(h, s, n) { }
 
     public async Task<RecommendationResult?> GetAsync(int count = 8)
         => (await GetAsync<RecommendationResult>($"api/recommendations?count={count}"))?.Data;
@@ -296,36 +274,5 @@ public class ToastService
     public void Info(string m)    => Show(m, "info");
     public void Warn(string m)    => Show(m, "warning");
 }
-
-// ════════════ SIGNALR ═════════════════════════════════════════
-public class SignalRService : IAsyncDisposable
-{
-    private HubConnection? _hub;
-    private bool           _connected;
-
-    public event Action<NotificationDto>? OnNotification;
-    public event Action<OrderDto>?        OnOrderUpdate;
-    public bool IsConnected => _hub?.State == HubConnectionState.Connected;
-
-    public async Task ConnectAsync(string baseUrl, string token)
-    {
-        if (_connected) return;
-        _hub = new HubConnectionBuilder()
-            .WithUrl(baseUrl.TrimEnd('/') + "/hubs/titan", o => o.AccessTokenProvider = () => Task.FromResult<string?>(token))
-            .WithAutomaticReconnect()
-            .Build();
-
-        _hub.On<NotificationDto>("ReceiveNotification", dto => OnNotification?.Invoke(dto));
-        _hub.On<OrderDto>("OrderStatusUpdated",         dto => OnOrderUpdate?.Invoke(dto));
-
-        try { await _hub.StartAsync(); _connected = true; }
-        catch (Exception ex) { Console.WriteLine($"[SignalR] {ex.Message}"); }
-    }
-
-    public async Task DisconnectAsync()
-    { if (_hub is not null) await _hub.StopAsync(); _connected = false; }
-
-    public async ValueTask DisposeAsync()
-    { if (_hub is not null) await _hub.DisposeAsync(); }
 }
-}
+

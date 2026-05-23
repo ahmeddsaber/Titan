@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Titan.Infrastructure.Services
         public async Task<ApiResponse<List<ProductDto>>> GetWishlistAsync(Guid userId)
         {
             var items = await _db.WishlistItems
-                .Where(w => w.UserId == userId)
+                .Where(w => w.UserId == userId && w.Product != null)
                 .Include(w => w.Product).ThenInclude(p => p.Category)
                 .Include(w => w.Product).ThenInclude(p => p.Images)
                 .Include(w => w.Product).ThenInclude(p => p.Variants)
